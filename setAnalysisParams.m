@@ -1,7 +1,7 @@
 function params=setAnalysisParams()
 params.expName = 'analysis-output';
 params.seed=2022;
-params.subjects=[101:102];
+params.subjects=[100];
 
 d = dir('..');
 
@@ -9,14 +9,28 @@ params.mainDir=d(1).folder;
 params.anatomyFolder='anatomy';
 params.functionalFolder='functional';
 
-params.rawBehavioral=fullfile('..','Raw_Data','Behavioral');
 params.rawDCM=fullfile('..','Raw_Data');
 params.fsfdir=fullfile('..','fsfs');
+params.rawBehavioral=fullfile(params.rawDCM, 'Behavioral');
 params.templateDir='/usr/local/fsl/data/standard/MNI152_T1_2mm_brain';
 
-params.conditions = {{'Motor_Only','Auditory_Only','Audio_Motor'},{'Motor_cues', 'Auditory_cues'}};
-params.run_nums = [1:2,1:2,1:4];
-params.localizerName = params.conditions{1}{3};
+% params.conditions{1} = conditions
+% params.conditions{2} = hands
+% params.conditions{2} = ears
+params.conditions = {{'motor_loc', 'auditory_loc', 'audiomotor'} ...
+    {2, 2, 4} ...
+    {{'R', 'L'}, {'none', 'none'}, {'R', 'L'}} ...
+    {{'none', 'none'}, {'R', 'L'}, {'R', 'L'}}};
+
+params.conditionsInOrder = {1,2,3};
+% params.conditionsInOrder = {1, 1, 2, 2, 3, 3, 3, 3};
+params.hands = {'R', 'L'}
+params.ears = {'R', 'L'}
+params.runNumsLocalizers = [1:2];
+params.runNumsAudiomotor = [1:4];
+params.run_nums = [runNumsLocalizers, runNumsLocalizers, runNumsAudiomotor];
+params.localizer1Name = params.conditions{1}{1};
+params.localizer2Name = params.conditions{1}{2};
 
 for sub = 1:length(params.subjects)
     if false

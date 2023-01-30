@@ -2,7 +2,7 @@ function brainExtraction(params)
 for s=params.subjects
         num_of_sessions = length(dir(fullfile(params.rawDCM,num2str(s)))) - 2;
     for session = 1:num_of_sessions
-        anatomy_dir = fullfile('..',params.expName,num2str(s),['session',num2str(session)],params.anatomyFolder);
+        anatomy_dir = fullfile('..',params.expName,num2str(s),['session_',num2str(session)],params.anatomyFolder);
         if ~exist(fullfile(anatomy_dir, [num2str(s),'anatomy_brain.nii.gz'])) || params.override
             bet_cell = cell(2,2);
             bet_cell{1,1} = 'anatomy';
