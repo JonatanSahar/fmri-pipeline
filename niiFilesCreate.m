@@ -27,9 +27,9 @@ for s=params.subjects
         if ~exist(fullfile(params.experimentDir,num2str(s),['session_',num2str(session)],params.anatomyFolder,[num2str(s),'anatomy.nii.gz'])) || params.override
             file_dir = fullfile(params.experimentDir,num2str(s),['session_',num2str(session)],params.anatomyFolder);
             mkdir(fullfile(file_dir,'temp'));
-            cmd = ['dcm2niix -o ' , fullfile(file_dir,'temp'),' ' fullfile(params.rawDCM,num2str(s),['session_',num2str(session)],anatomy_file)];
+            cmd = ['dcm2niix -z y -o ' , fullfile(file_dir,'temp'),' ' fullfile(params.rawDCM,num2str(s),['session_',num2str(session)],anatomy_file)];
             system(cmd);
-            image = dir(fullfile(file_dir,'temp', '*.nii.gz'));
+            image = dir(fullfile(file_dir,'temp', '*.nii.gz'))
             movefile(fullfile(file_dir,'temp',image(1).name),fullfile(file_dir,[num2str(s),'anatomy','.nii.gz']));
             rmdir(fullfile(file_dir,'temp'),'s');
         end
