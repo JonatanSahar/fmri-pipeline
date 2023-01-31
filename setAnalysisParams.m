@@ -4,10 +4,11 @@ params.expName = 'analysis-output';
 params.seed=2022;
 params.subjects=[100];
 
-% d = ('..');
-% params.mainDir=d(1).folder;
+d = dir('./data');
+params.mainDir = d(1)
+params.mainDir = params.mainDir.folder;
+% params.mainDir=params.baseDirPath;
 
-params.mainDir=params.baseDirPath;
 params.anatomyFolder='anatomy';
 params.functionalFolder='functional';
 
@@ -25,7 +26,7 @@ params.conditions = {{'motor_loc', 'auditory_loc', 'audiomotor'} ...
     {{'R', 'L'}, {'none', 'none'}, {'R', 'L'}} ...
     {{'none', 'none'}, {'R', 'L'}, {'R', 'L'}}};
 
-params.conditionsInOrder = {1,2,3};
+params.conditionsInOrder = [1,2,3];
 % params.conditionsInOrder = {1, 1, 2, 2, 3, 3, 3, 3};
 params.hands = {'R', 'L'}
 params.ears = {'R', 'L'}

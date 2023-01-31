@@ -2,6 +2,8 @@ clear all; close all; clc;
 %%set analysis params
 params = setAnalysisParams();
 
+createRunOrder(params);
+
 %% create folders for new subjects
 createFolders(params);
 %% set parameters for the analysis
