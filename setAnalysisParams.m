@@ -9,9 +9,9 @@ params.mainDir=d(1).folder;
 params.anatomyFolder='anatomy';
 params.functionalFolder='functional';
 
-params.rawDCM=fullfile('..','Raw_Data');
+params.rawDCM=fullfile('..','raw-data');
 params.fsfdir=fullfile('..','fsfs');
-params.rawBehavioral=fullfile(params.rawDCM, 'Behavioral');
+params.rawBehavioral=fullfile(params.rawDCM, 'behavioral');
 params.templateDir='/usr/local/fsl/data/standard/MNI152_T1_2mm_brain';
 
 % params.conditions{1} = conditions
@@ -28,7 +28,7 @@ params.hands = {'R', 'L'}
 params.ears = {'R', 'L'}
 params.runNumsLocalizers = [1:2];
 params.runNumsAudiomotor = [1:4];
-params.run_nums = [runNumsLocalizers, runNumsLocalizers, runNumsAudiomotor];
+params.run_nums = [params.runNumsLocalizers, params.runNumsLocalizers, params.runNumsAudiomotor];
 params.localizer1Name = params.conditions{1}{1};
 params.localizer2Name = params.conditions{1}{2};
 
