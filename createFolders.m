@@ -1,6 +1,6 @@
 function createFolders(params)
 %% CREATE FOLDERS FOR ANALYSIS
-mainFolder=fullfile('..',params.expName);
+mainFolder = params.experimentDir;
 if ~exist(mainFolder)
     mkdir(mainFolder)
 end

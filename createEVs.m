@@ -6,7 +6,7 @@ function params=createEVs(params)
 for s = params.subjects
     num_of_sessions = length(dir(fullfile(params.rawDCM,num2str(s)))) - 2;
     for session = 1:num_of_sessions
-        EV_dir=fullfile('..',params.expName,num2str(s),['session_',num2str(session)],'EVs');
+        EV_dir=fullfile(params.experimentDir,num2str(s),['session_',num2str(session)],'EVs');
         if ~exist(EV_dir)
             mkdir(EV_dir);
         end

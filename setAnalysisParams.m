@@ -1,16 +1,19 @@
 function params=setAnalysisParams()
+params.baseDirPath = '/media/user/Data/fmri-data/';
 params.expName = 'analysis-output';
 params.seed=2022;
 params.subjects=[100];
 
-d = dir('..');
+% d = ('..');
+% params.mainDir=d(1).folder;
 
-params.mainDir=d(1).folder;
+params.mainDir=params.baseDirPath;
 params.anatomyFolder='anatomy';
 params.functionalFolder='functional';
 
-params.rawDCM=fullfile('..','raw-data');
-params.fsfdir=fullfile('..','fsfs');
+params.experimentDir=fullfile(params.mainDir, params.expName);
+params.rawDCM=fullfile(params.mainDir,'raw-data');
+params.fsfdir=fullfile(params.mainDir,'fsfs');
 params.rawBehavioral=fullfile(params.rawDCM, 'behavioral');
 params.templateDir='/usr/local/fsl/data/standard/MNI152_T1_2mm_brain';
 
