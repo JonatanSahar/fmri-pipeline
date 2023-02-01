@@ -1,4 +1,4 @@
-function params=createEVs(params)
+function params=createEVs_old(params)
 %create EVs based on the randomized block order, and save in the results directory
 % returns number of disqualified blcoks in each condition in params
 

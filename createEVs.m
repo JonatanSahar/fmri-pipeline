@@ -11,7 +11,7 @@ for s = params.subjects
             mkdir(EV_dir);
         end
         load(fullfile(params.rawBehavioral, num2str(s) ,['trialOrder_Session',num2str(session)]));
-        cond_order = trialOrder(1,:,3);
+        order = trialOrder;
 
         for condId = 1:length(params.conditions{1})
             cond = params.conditions{1}{condId};
@@ -35,7 +35,10 @@ for s = params.subjects
                             affector = 'hand'
                         end
 
-                        splitEventTable(table, affector, prefix, output_dir, fields_to_keep);
+                        events_str = sprintf("%d_EV_%s",...
+                                             subId,...
+                                             cond);
+                        splitEventTable(table, affector, events_str, EV_dir);
                         fprintf("%s_%d %s %s\n", cond, condRunNum, hand, ear)
                     end
                 end

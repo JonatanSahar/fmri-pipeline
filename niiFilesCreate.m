@@ -5,6 +5,7 @@ for s=params.subjects
         scans=dir(fullfile(params.rawDCM,num2str(s),'session_1'));
         scans={scans(find([scans.isdir])).name};
         scans(ismember(scans,{'.','..','ignore'}))=[];
+        scans = scans(cellfun('isempty', strfind(scans,'SBRef')));
         try
             load(fullfile(params.rawBehavioral,num2str(s),['trialOrder_session_',num2str(session),'.mat']));
             order = trialOrder;
@@ -28,7 +29,6 @@ for s=params.subjects
             file_dir = fullfile(params.experimentDir,num2str(s),'session_1',params.anatomyFolder);
             mkdir(fullfile(file_dir,'temp'));
             cmd = ['dcm2niix -z y -o ' , fullfile(file_dir,'temp'),' ' fullfile(params.rawDCM,num2str(s),'session_1',anatomy_file)];
-            cmd = ['touch ', fullfile(file_dir,'temp', anatomy_file, '.nii.gz')];
             system(cmd);
             image = dir(fullfile(file_dir,'temp', '*.nii.gz'))
             movefile(fullfile(file_dir,'temp',image(1).name),fullfile(file_dir,[num2str(s),'anatomy','.nii.gz']));
@@ -43,12 +43,12 @@ for s=params.subjects
                 runType = scan{5};
                 runNum = str2double(scan{1});
                 % runNum = scan{6};
-                file_name = ['sub',num2str(s), '_', runType,'run_',runNum,'.nii.gz'];
+                file_name = sprintf('sub%d_%s_run_%d.nii.gz',s, runType, runNum);
                 file_dir = fullfile(params.experimentDir,...
                                     num2str(s),...
                                     'session_1',...
                                     params.functionalFolder,...
-                                    params.conditions{1}{order(runNum)});
+                                    params.conditions{1}{order(runNum)})
                 if ~exist(fullfile(file_dir,file_name),'file') || params.override
                     mkdir(fullfile(file_dir,'temp'));
                     cmd = ['dcm2niix -z y -o ' ,...
@@ -57,11 +57,12 @@ for s=params.subjects
                            fullfile(params.rawDCM,num2str(s),...
                                         'session_1',...
                                         scans{i})]
-                    cmd = ['touch ', fullfile(file_dir,'temp', '*.nii.gz')];
                     system(cmd);
                     image = dir(fullfile(file_dir,'temp', '*.nii.gz'));
-                    movefile(fullfile(file_dir,'temp',image(1).name),fullfile(file_dir,file_name));
-                    rmdir(fullfile(file_dir,'temp'));
+                    from =fullfile(file_dir, 'temp', image(1).name)
+                    to = fullfile(file_dir, file_name)
+                    movefile(from, to);
+                    rmdir(fullfile(file_dir,'temp'), 's');
                 end
             end
         end
