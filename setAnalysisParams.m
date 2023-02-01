@@ -4,10 +4,11 @@ params.expName = 'analysis-output';
 params.seed=2022;
 params.subjects=[100];
 
-d = dir('./data');
-params.mainDir = d(1)
-params.mainDir = params.mainDir.folder;
-% params.mainDir=params.baseDirPath;
+% d = dir('./data');
+% params.mainDir = d(1)
+% params.mainDir = params.mainDir.folder;
+
+params.mainDir=params.baseDirPath;
 
 params.anatomyFolder='anatomy';
 params.functionalFolder='functional';

@@ -3,6 +3,7 @@ function createRunOrder(params)
             scans=dir(fullfile(params.rawDCM,num2str(s),'session_1', '*cmrr*'));
             scans={scans(find([scans.isdir])).name};
             scans(ismember(scans,{'.','..','ignore'}))=[];
+            scans = scans(cellfun('isempty', strfind(scans,'SBRef')))
             assert(length(scans) == length(params.conditionsInOrder))
                 for i=1:length(scans)
                     scan=strsplit(scans{i}, '_');
