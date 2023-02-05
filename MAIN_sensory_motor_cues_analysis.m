@@ -14,7 +14,7 @@ niiFilesCreate(params);
 brainExtraction(params);
 
 %% create EVs
-params = createEVs(params);  % creates EVs for all conditions
+createEVs(params);  % creates EVs for all conditions
 %% pre-processing and first level
 p = gcp('nocreate');
 if numel(p) ==0
