@@ -22,7 +22,7 @@ for s=params.subjects
             Y = strrep(Y, 'run2', fullfile(params.mainDir,params.expName,num2str(s),['session',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run2.feat']));
             if order(1,r) == 3
                 Y = strrep(Y, 'is_loc' , num2str(0)) ;
-                Y = strrep(Y, 'run3', fullfile(params.mainDir,params.expName,num2str(s),['session',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run1.feat']));                
+                Y = strrep(Y, 'run3', fullfile(params.mainDir,params.expName,num2str(s),['session',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run1.feat']));
             else
                 Y = strrep(Y, 'is_loc' , num2str(1)) ;
                 Y = strrep(Y, 'run3', fullfile(params.mainDir,params.expName,num2str(s),['session',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run3.feat']));

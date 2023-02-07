@@ -19,15 +19,8 @@ params.fsfdir=fullfile(params.mainDir,'fsfs');
 params.rawBehavioral=fullfile(params.rawDCM, 'behavioral');
 params.templateDir='/usr/local/fsl/data/standard/MNI152_T1_2mm_brain';
 
-% params.conditions{1} = conditions
-% params.conditions{2} = hands
-% params.conditions{2} = ears
-params.conditions = {
-    {'motor_loc', 'auditory_loc', 'audiomotor'}; ...
-    [1, 1, 2]}; ...
-    % {2, 2, 4} ...
-    % {{'R', 'L'}, {'none', 'none'}, {'R', 'L'}}; ...
-    % {{'none', 'none'}, {'R', 'L'}, {'R', 'L'}}};
+params.conditions = ["motor_loc", "auditory_loc", "audiomotor"];
+params.numRunsPerCondition = [1, 1, 2];
 
 params.conditionsInOrder = [1,2,3];
 % params.conditionsInOrder = {1, 1, 2, 2, 3, 3, 3, 3};
@@ -35,8 +28,6 @@ params.sides = {'R', 'L'}
 params.runNumsLocalizers = [1:2];
 params.runNumsAudiomotor = [1:4];
 params.run_nums = [params.runNumsLocalizers, params.runNumsLocalizers, params.runNumsAudiomotor];
-params.localizer1Name = params.conditions{1}{1};
-params.localizer2Name = params.conditions{1}{2};
 
 for sub = 1:length(params.subjects)
     if false

@@ -6,23 +6,29 @@ if ~exist(mainFolder)
 end
 for i=params.subjects
     if ~exist(fullfile(mainFolder,num2str(i)))
-        params.subjectDir    = fullfile(mainFolder,"%d")
-        params.sessionDir    = fullfile(params.subjectDir,'session_1');
-        params.anatomyDir    = fullfile(params.sessionDir,'anatomy');
-        params.EVDir         = fullfile(params.sessionDir,'EVs');
-        params.functionalDir = fullfile(params.sessionDir,'functional');
+        subjectDir    = fullfile(mainFolder,"%d")
+        sessionDir    = fullfile(subjectDir,'session_1');
+        anatomyDir    = fullfile(sessionDir,'anatomy');
+        EVDir         = fullfile(sessionDir,'EVs');
+        functionalDir = fullfile(sessionDir,'functional');
 
-        system(['mkdir ', sprintrf(params.subjectDir, num2str(i))];
-        system(['mkdir ', sprintrf(params.sessionDir, num2str(i))];
-        system(['mkdir ', sprintrf(params.anatomyDir, num2str(i))];
-        system(['mkdir ', sprintrf(params.EVDir, num2str(i))];
-        system(['mkdir ', sprintrf(params.functionalDir, num2str(i))];
+        params.sessionDir    =  strrep(sessionDir, "\", "\\");
+        params.EVDir         =  strrep(EVDir, "\", "\\");
+        params.anatomyDir    =  strrep(anatomyDir, "\", "\\");
+        params.subjectDir    =  strrep(subjectDir, "\", "\\");
+        params.functionalDir =  strrep(functionalDir, "\", "\\");
+
+        system('mkdir ' + sprintf(params.subjectDir, i));
+        system('mkdir ' + sprintf(params.sessionDir, i));
+        system('mkdir ' + sprintf(params.anatomyDir, i));
+        system('mkdir ' + sprintf(params.EVDir, i));
+        system('mkdir ' + sprintf(params.functionalDir, i));
 
 
-        functional = sprintrf(params.functionalDir, num2str(i))
-        system(['mkdir ', fullfile(functional, params.conditions{1}{1})]);
-        system(['mkdir ', fullfile(functional, params.conditions{1}{2})]);
-        system(['mkdir ', fullfile(functional, params.conditions{1}{3})]);
+        functional = sprintf(params.functionalDir, i)
+        system(['mkdir ', fullfile(functional, params.conditions(1))]);
+        system(['mkdir ', fullfile(functional, params.conditions(2))]);
+        system(['mkdir ', fullfile(functional, params.conditions(3))]);
         
     end
 end

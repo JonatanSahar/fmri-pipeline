@@ -2,98 +2,96 @@ function runPreProcessing(params)
 
 %% RUN FEAT
 
-for condId = 1:length(params.conditions{1})
-    cond = params.conditions{1}{condId};
-    for condRunNum = 1:params.conditions{2}(condId)
-        base_str = "%d_EV_%s_%d";
-        if contains(cond, 'audiomotor')
-            base_str = base_str + "_[RL]E";
-        end
+for subId=params.subjects
+    disp(['analysing subject number ',num2str(subId)]);
+    functionalDir = sprintf(params.functionalDir, subId);
+    anatomyDir = sprintf(params.anatomyDir, subId);
 
-
-        for side = {"L", "R", "DISQ"}
-            side = side{1}
-            if side == "DISQ"
-                EV_filename = sprintf(base_str + "_DISQ.txt",...
-                                      subId,...
-                                      cond, ...
-                                      condRunNum)
-            else
-                base_str = base_str + "_%s%s.txt"
-                if contains(cond, 'motor')
-                    affector_suffix = 'H';
-                elseif contains(cond, 'auditory')
-                    affector_suffix = 'E';
-                end
-                EV_filename = sprintf(base_str,...
-                                      subId,...
-                                      cond, ...
-                                      condRunNum,...
-                                      side, ...
-                                      affector_suffix);
-            end
-            EVDir = sprintf(params.EVDir, num2str(subId));
-            EV_PATHS.(side) = fullfile(EVDir,EV_filename)
-        end
-    end
-end
-
-
-
-order=[ones(1,3),ones(1,3)*2,3,3,ones(1,3),ones(1,3)*2;ones(1,8),ones(1,6)*2;1:3,1:3,1:2,1:3,1:3];
-
-for s=params.subjects
-    disp(['analysing subject number ',num2str(s)]);
-    for r=1:length(order)
-        if exist(fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run',num2str(order(3,r)),'.feat']),'dir') || params.override
+    base_str = "%d_EV_%s_%d";
+    for condId = 1:length(params.conditions)
+        cond = params.conditions(condId);
+        numRuns = params.numRunsPerCondition(condId);
+        featDir = fullfile(functionalDir, cond,'.feat');
+        if exist(featDir,'dir') && ~params.override
             continue
         end
+        for condRunNum = 1:numRuns
+            disp(['Condition ', cond, ' run number ',condRunNum]);
+            cond_str = base_str;
+            if contains(cond, 'audiomotor')
+                cond_str = base_str + "_*E";
+            end
 
-        disp(['Session ',num2str(order(2,r)),' condition ',params.conditions{order(2,r)}{order(1,r)}, ' run number ',num2str(order(3,r))]);
-        % distribute fsf files in functional dirs and run first level Feat
-        if order(1,r)== 3
-            fid = fopen(fullfile(params.fsfdir, 'localizer.fsf')) ;
-        else
-            if s == 1 && order(2,r) == 1
-                fid = fopen(fullfile(params.fsfdir, ['MRI_data_sub1.fsf'])) ;
+            % get the paths for all EV files
+            sides = ["L", "R", "DISQ"];
+            for side = sides
+                if side == "DISQ"
+                    str = cond_str + "_DISQ.txt";
+                    EV_filename = sprintf(str,...
+                                          subId,...
+                                          cond, ...
+                                          condRunNum);
+                else
+                    str = cond_str + "_%s%s.txt";
+                    if contains(cond, 'motor')
+                        affector_suffix = 'H';
+                    elseif contains(cond, 'auditory')
+                        affector_suffix = 'E';
+                    end
+                    EV_filename = sprintf(str,...
+                                          subId,...
+                                          cond, ...
+                                          condRunNum,...
+                                          side, ...
+                                          affector_suffix);
+                end
+                EVDir = sprintf(params.EVDir, num2str(subId));
+                EVPaths.(side) = dir(fullfile(EVDir,EV_filename));
+            end % for side
+
+
+
+            % distribute fsf files in functional dirs and run first level Feat
+            if contains(cond, 'loc')
+                fid = fopen(fullfile(params.fsfdir, 'localizer.fsf')) ;
             else
                 fid = fopen(fullfile(params.fsfdir, ['MRI_data.fsf'])) ;
             end
-        end
-        X = fread(fid) ;
-        fclose(fid) ;
-        X = char(X.') ;
-        % replace strings for analysis
-        %% set file directories % params
-        Y = strrep(X, 'pp_dir', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run',num2str(order(3,r)),'.nii.gz'])) ;
-        Y = strrep(Y, 'out_dir' , fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run',num2str(order(3,r))])) ;
-        Y = strrep(Y, 'templates_dir', params.templateDir) ;
-        Y = strrep(Y, 'needs_fieldmap', num2str(params.fieldMap)) ;
-        Y = strrep(Y, 'smoothing_param', num2str(params.smoothing)) ;
-        Y = strrep(Y, 'is_normalized', num2str(params.normalization)) ;
-        Y = strrep(Y, 'anatomy_dir', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],params.anatomyFolder,[num2str(s),'anatomy_brain.nii.gz']));
-        %% set EVs
-        if order(1,r) ~= 3
-            Y = strrep(Y, 'right_ev', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),params.conditions{order(2,r)}{order(1,r)},num2str(order(3,r)),'_RIGHT.txt']));
-            Y = strrep(Y, 'left_ev', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),params.conditions{order(2,r)}{order(1,r)},num2str(order(3,r)),'_LEFT.txt']));
-            Y = strrep(Y, 'disq_ev', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),params.conditions{order(2,r)}{order(1,r)},num2str(order(3,r)),'_DISQ.txt']));
-            %                 if order(2,r) == 2
-            Y = strrep(Y, 'oddball_dir', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),params.conditions{order(2,r)}{order(1,r)},num2str(order(3,r)),'_ODD.txt']));
-            %                 end
-        else
-            Y = strrep(Y, 'localizer_ev', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),'Visual_Localizer',num2str(order(3,r)),'_present.txt']));
-            Y = strrep(Y, 'oddEV', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],'EVs',[num2str(s),'Visual_Localizer',num2str(order(3,r)),'_ODD.txt']));
 
-        end
-        fid2 = fopen(fullfile(params.fsfdir, ['fsfs',num2str(r),'.fsf']) ,'wt') ;
-        fwrite(fid2,Y) ;
-        fclose (fid2) ;
-        cmd = ['feat ' fullfile(params.fsfdir , ['fsfs',num2str(r),'.fsf'])];
-        unix(cmd);
-        unix(['firefox ', fullfile(params.mainDir,params.expName,num2str(s),['session_1',num2str(order(2,r))],params.functionalFolder,params.conditions{order(2,r)}{order(1,r)},['sub',num2str(s),'run',num2str(order(3,r))]), '.feat/report_log.html']);
-        unix(['rm ', fullfile(params.fsfdir,['fsfs',num2str(r),'.fsf'])]);
-    end
-    disp(['finished subject number ',num2str(s)]);
-    
-end
+            X = fread(fid) ;
+            fclose(fid) ;
+            X = char(X.') ;
+            % replace strings for analysis
+            %% set file directories % params
+            scanBaseName = sprintf("sub_%d_%s_%d", subId, cond, condRunNum);
+            scanName = scanBaseName + ".nii.gz";
+            scanPath = fullfile(functionalDir, scanName);
+            outputDirPath = fullfile(functionalDir, scanName);
+            anatomyScanPath = fullfile(anatomyDir, 'anatomy_brain.nii.gz');
 
+            Y = strrep(X, 'pp_dir', scanPath);
+            Y = strrep(Y, 'out_dir', outputDirPath);
+            Y = strrep(Y, 'templates_dir', params.templateDir) ;
+            Y = strrep(Y, 'needs_fieldmap', num2str(params.fieldMap)) ;
+            Y = strrep(Y, 'smoothing_param', num2str(params.smoothing)) ;
+            Y = strrep(Y, 'is_normalized', num2str(params.normalization)) ;
+            Y = strrep(Y, 'anatomy_dir', anatomyScanPath);
+
+            %% set EVs
+            Y = strrep(Y, 'right_ev', EVPaths.R);
+            Y = strrep(Y, 'left_ev', EVPaths.L);
+            Y = strrep(Y, 'disq_ev',EVPaths.DISQ);
+            % Y = strrep(Y, 'oddball_dir',
+
+            fid2 = fopen(fullfile(params.fsfdir, ['fsfs',num2str(r),'.fsf']) ,'wt') ;
+            fwrite(fid2,Y) ;
+            fclose (fid2) ;
+            cmd = ['feat ' fullfile(params.fsfdir , ['fsfs',num2str(r),'.fsf'])];
+            unix(cmd);
+            unix(['firefox ', fullfile(featDir, 'report_log.html')]);
+            unix(['rm ', fullfile(params.fsfdir,['fsfs',num2str(r),'.fsf'])]);
+        end % for condRunNum
+        EVPaths
+    end % for condId
+    disp(['finished subject number ',num2str(subId)]);
+end % for subId

@@ -13,9 +13,9 @@ function createEVs(params)
             load(fullfile(params.rawBehavioral, num2str(s) ,['trialOrder_session_',num2str(session), '.mat']));
             order = trialOrder;
 
-            for condId = 1:length(params.conditions{1})
-                cond = params.conditions{1}{condId};
-                for condRunNum = 1:params.conditions{2}(condId)
+            for condId = 1:length(params.conditions)
+                cond = params.conditions(condId);
+                for condRunNum = 1:params.numRunsPerCondition(condId)
                     tableFileName = sprintf("%d_%s_%d.mat", ...
                                             s, ...
                                             cond, ...

@@ -41,14 +41,14 @@ for s=params.subjects
             scan=strsplit(scans{i}, '_');
             if strcmp(scan{2},'cmrr') && length(scan)==5
                 runType = scan{5};
-                runNum = str2double(scan{1});
-                % runNum = scan{6};
-                file_name = sprintf('sub%d_%s_run_%d.nii.gz',s, runType, runNum);
+                % runNum = str2double(scan{1});
+                runNum = scan{6};
+                file_name = sprintf('sub%d_%s_%d.nii.gz',s, runType, runNum);
                 file_dir = fullfile(params.experimentDir,...
                                     num2str(s),...
                                     'session_1',...
                                     params.functionalFolder,...
-                                    params.conditions{1}{order(runNum)})
+                                    params.conditions(order(runNum)))
                 if ~exist(fullfile(file_dir,file_name),'file') || params.override
                     mkdir(fullfile(file_dir,'temp'));
                     cmd = ['dcm2niix -z y -o ' ,...
