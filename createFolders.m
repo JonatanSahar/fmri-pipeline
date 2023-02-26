@@ -5,18 +5,7 @@ if ~exist(mainFolder)
     mkdir(mainFolder)
 end
 for i=params.subjects
-    if ~exist(fullfile(mainFolder,num2str(i)))
-        subjectDir    = fullfile(mainFolder,"%d")
-        sessionDir    = fullfile(subjectDir,'session_1');
-        anatomyDir    = fullfile(sessionDir,'anatomy');
-        EVDir         = fullfile(sessionDir,'EVs');
-        functionalDir = fullfile(sessionDir,'functional');
-
-        params.sessionDir    =  strrep(sessionDir, "\", "\\");
-        params.EVDir         =  strrep(EVDir, "\", "\\");
-        params.anatomyDir    =  strrep(anatomyDir, "\", "\\");
-        params.subjectDir    =  strrep(subjectDir, "\", "\\");
-        params.functionalDir =  strrep(functionalDir, "\", "\\");
+    if ~exist(fullfile(mainFolder,num2str(i)), dir) || params.override
 
         system('mkdir ' + sprintf(params.subjectDir, i));
         system('mkdir ' + sprintf(params.sessionDir, i));

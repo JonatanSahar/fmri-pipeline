@@ -1,0 +1,12 @@
+pilot-shiri/10_cmrr_mbep2d_388vol_Run1_SBRef
+pilot-shiri/11_cmrr_mbep2d_388vol_Run1
+pilot-shiri/18_t2_tirm_tra_dark-fluid_FLAIR
+pilot-shiri/1_localizer_3D_2 (9X5X5)
+pilot-shiri/2_cmrr_mbep2d_388vol_MotorLoc_SBRef
+pilot-shiri/3_cmrr_mbep2d_388vol_MotorLoc
+pilot-shiri/4_cmrr_mbep2d_388vol_AuditoryLoc_SBRef
+pilot-shiri/5_cmrr_mbep2d_388vol_AuditoryLoc
+pilot-shiri/6_T1w_MPRAGE_RL
+pilot-shiri/7_T1w_MPRAGE_RL
+pilot-shiri/8_cmrr_mbep2d_388vol_Run1_SBRef
+pilot-shiri/9_cmrr_mbep2d_388vol_Run1
