@@ -7,7 +7,7 @@ for s=params.subjects
         scans(ismember(scans,{'.','..','ignore'}))=[];
         scans = scans(cellfun('isempty', strfind(scans,'SBRef')));
         try
-            load(fullfile(params.rawBehavioral,num2str(s),['trialOrder_session_',num2str(session),'.mat']));
+            load(fullfile(params.rawBehavioral,num2str(s),'trialOrder.mat'));
             order = trialOrder;
             % if isempty(params.alt_DCM_order{session,params.subjects==s})
             %     order = trialOrder(1,:,3);
@@ -37,13 +37,15 @@ for s=params.subjects
         
         
         %% look for functional data
+        condNumRum = 0;
         for i=1:length(scans)
             scan=strsplit(scans{i}, '_');
             if strcmp(scan{2},'cmrr') && length(scan)==5
+                condNumRum = condNumRum + 1;
                 runType = scan{5};
                 % runNum = str2double(scan{1});
                 runNum = scan{6};
-                file_name = sprintf('sub%d_%s_%d.nii.gz',s, runType, runNum);
+                file_name = sprintf('sub%d_%s_%d.nii.gz',s, runType, condNumRum);
                 file_dir = fullfile(params.experimentDir,...
                                     num2str(s),...
                                     'session_1',...

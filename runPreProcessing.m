@@ -46,7 +46,7 @@ for subId=params.subjects
                                           affector_suffix);
                 end
                 EVDir = sprintf(params.EVDir, subId);
-                d = dir(fullfile(EVDir,EV_filename));
+                d = dir(fullfile(EVDir,EV_filename))
                 EVPath = fullfile(d.folder, d.name)
                 EVPaths.(side) = EVPath;
             end % for side
@@ -54,10 +54,10 @@ for subId=params.subjects
 
 
             % distribute fsf files in functional dirs and run first level Feat
-            if contains(cond, 'loc')
-                fid = fopen(fullfile(params.fsfdir, 'localizer.fsf')) ;
+            if contains(cond, 'Loc')
+                fid = fopen(fullfile("./fsf-templates", 'localizer.fsf')) ;
             else
-                fid = fopen(fullfile(params.fsfdir, 'MRI_data.fsf')) ;
+                fid = fopen(fullfile("./fsf-templates", 'MRI_data.fsf')) ;
             end
 
             X = fread(fid) ;
@@ -65,9 +65,12 @@ for subId=params.subjects
             X = char(X.') ;
             % replace strings for analysis
             %% set file directories % params
-            scanBaseName = sprintf("sub_%d_%s_%d", subId, cond, condRunNum);
+            scanBaseName = sprintf("sub%d_%s_run_%d", subId, cond, condRunNum);
             scanName = scanBaseName + ".nii.gz";
-            scanPath = fullfile(functionalDir, scanName);
+            scanPath = fullfile(functionalDir, cond, scanName);
+            d = dir(scanPath);
+
+            % scanPath = fullfile(d.fold, d.name);
 
             outputDirPath = fullfile(functionalDir, scanBaseName);
             if isequal(cond, 'audiomotor')
@@ -76,9 +79,10 @@ for subId=params.subjects
                 scanBaseNameWithEar = sprintf("%s_%s", scanBaseName, ear);
                 outputDirPath = fullfile(functionalDir, scanBaseNameWithEar);
             end
-            anatomyScanPath = fullfile(anatomyDir, 'anatomy_brain.nii.gz');
+            anatomyFileName = sprintf("%danatomy_brain", subId)
+            anatomyScanPath = fullfile(anatomyDir, anatomyFileName);
 
-            Y = strrep(X, 'pp_dir', scanPath);
+            Y = strrep(X, 'nii_file_path_no_extension', scanPath);
             Y = strrep(Y, 'out_dir', outputDirPath);
             Y = strrep(Y, 'templates_dir', params.templateDir) ;
             Y = strrep(Y, 'needs_fieldmap', num2str(params.fieldMap)) ;
@@ -92,14 +96,14 @@ for subId=params.subjects
             Y = strrep(Y, 'left_ev', EVPaths.L);
             Y = strrep(Y, 'disq_ev',EVPaths.DISQ);
 
-            fsfFilename = sprintf("fsf_%d_%s_%d", subId, cond, condRunNum);
+            fsfFilename = sprintf("fsf_%d_%s_%d.fsf", subId, cond, condRunNum);
             fsfPath = fullfile(params.fsfdir, fsfFilename);
             fid = fopen(fsfPath,'wt') ;
             fwrite(fid,Y) ;
             fclose (fid) ;
             cmd = sprintf('feat %s', fsfPath);
             fprintf("%s\n", cmd);
-            % unix(cmd);
+            unix(cmd);
             % unix(['firefox ', fullfile(featDir, 'report_log.html')]);
             % unix('rm ', fsfPath);
         end % for condRunNum

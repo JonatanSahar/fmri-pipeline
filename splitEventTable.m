@@ -38,7 +38,7 @@ function splitEventTable(T, condition, output_name_prefix, output_dir)
         end
 
         save(fullfile(output_dir, file_name), "table");
-        writetable(table, fullfile(output_dir, file_name), 'Delimiter','tab');
+        writetable(table, fullfile(output_dir, file_name), 'Delimiter','tab', 'WriteVariableNames', false);
 
     end
 

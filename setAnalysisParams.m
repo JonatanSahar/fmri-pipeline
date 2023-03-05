@@ -1,11 +1,14 @@
 function params=setAnalysisParams()
     params.baseDirPath = '/media/user/Data/fmri-data/';
     params.expName = 'analysis-output';
+    % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    params.subjects=[100];
+    params.subjects=[101];
     params.mainDir=params.baseDirPath;
 
-    d = dir('./data');
+    % d = dir('./data');
+    d = dir(params.baseDirPath);
+
     params.mainDir = d(1)
     params.mainDir = params.mainDir.folder;
 
@@ -17,13 +20,15 @@ function params=setAnalysisParams()
     params.rawDCM=fullfile(params.mainDir,'raw-data');
     params.fsfdir=fullfile(params.mainDir,'fsf-files');
     params.rawBehavioral=fullfile(params.rawDCM, 'behavioral');
-    params.templateDir='/usr/local/fsl/data/standard/MNI152_T1_2mm_brain';
+    params.templateDir='/home/user/fsl/data/standard/MNI152_T1_2mm_brain'
 
-    params.conditions = ["motor_loc", "auditory_loc", "audiomotor"];
-    params.numRunsPerCondition = [1, 1, 2];
 
-    params.conditionsInOrder = [1,2,3,3];
-    % params.conditionsInOrder = {1, 1, 2, 2, 3, 3, 3, 3};
+    params.conditions = ["motorLoc", "auditoryLoc", "audiomotor"];
+    % params.conditions = ["motor_loc", "auditory_loc", "audiomotor"];
+    params.numRunsPerCondition = [2, 2, 4];
+
+    % params.conditionsInOrder = [1,2,3,3];
+    params.conditionsInOrder = [1, 1, 2, 2, 3, 3, 3, 3];
     params.sides = {'R', 'L'}
     params.runNumsLocalizers = [1:2];
     params.runNumsAudiomotor = [1:4];

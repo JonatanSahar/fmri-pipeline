@@ -2,11 +2,12 @@ clear all; close all; clc;
 %%set analysis params
 params = setAnalysisParams();
 
-createRunOrder(params);
 
 %% create folders for new subjects
 createFolders(params);
-%% set parameters for the analysis
+
+createRunOrder(params);
+
 %% dcm2nii
 niiFilesCreate(params);
 
@@ -30,3 +31,4 @@ runPreProcessing(params);
 createCommonMask(params);
 params = createPercentChangeForSVM(params);
 params = analyse_second_lvl(params);
+
