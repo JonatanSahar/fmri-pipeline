@@ -8,9 +8,9 @@ for s = params.subjects
         for session = 1:num_of_sessions
             for run = 1:6
                 if run<4
-                    runDir = fullfile(fileDir,num2str(s),['session',num2str(session)],params.functionalFolder,params.conditions{session}{1},['sub',num2str(s),'run',num2str(run),'.feat']);
+                    runDir = fullfile(fileDir,num2str(s),params.functionalFolder,params.conditions{session}{1},['sub',num2str(s),'run',num2str(run),'.feat']);
                 else
-                    runDir = fullfile(fileDir,num2str(s),['session',num2str(session)],params.functionalFolder,params.conditions{session}{2},['sub',num2str(s),'run',num2str(run-3),'.feat']);
+                    runDir = fullfile(fileDir,num2str(s),params.functionalFolder,params.conditions{session}{2},['sub',num2str(s),'run',num2str(run-3),'.feat']);
                 end
                 if ~exist(fullfile(runDir,'mask_MNI.nii.gz')) || params.override
                     mni = ['applywarp -i ', (fullfile(runDir,'mask.nii.gz')),' -o ', (fullfile(runDir,'mask_MNI.nii.gz')), ' -r ', fullfile(runDir,'reg','standard'), ' --warp=' ,fullfile(runDir,'reg','highres2standard_warp'),' --premat=',fullfile(runDir,'reg','example_func2highres.mat')];

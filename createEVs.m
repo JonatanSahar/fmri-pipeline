@@ -4,7 +4,7 @@ function createEVs(params)
 T = table();
 %% MAIN LOOP
     for subId = params.subjects
-        EV_dir=fullfile(params.experimentDir,num2str(subId),'session_1','EVs');
+        EV_dir=fullfile(params.experimentDir,num2str(subId),'EVs');
         if ~exist(EV_dir)
             mkdir(EV_dir);
         end

@@ -1,8 +1,8 @@
 function niiFilesCreate(params)
 for s=params.subjects
-    num_of_sessions = length(dir(fullfile(params.rawDCM,num2str(s)))) - 2;
-    for session = 1:num_of_sessions
-        scans=dir(fullfile(params.rawDCM,num2str(s),'session_1'));
+
+    scanDirPath = fullfile(params.rawDCM,num2str(s));
+        scans=dir(scanDirPath);
         scans={scans(find([scans.isdir])).name};
         scans(ismember(scans,{'.','..','ignore'}))=[];
         scans = scans(cellfun('isempty', strfind(scans,'SBRef')));
@@ -15,20 +15,21 @@ for s=params.subjects
             %     order = trialOrder(1,params.alt_DCM_order{session,params.subjects==s},3);
             % end
         catch
-            error(['no behavioral data found for subject ', num2str(s), ' session ' ,num2str(session)]);
+            error(['no behavioral data found for subject ', num2str(s)]);
         end
+
         %% look for anatomy data
-        anatomy = dir(fullfile(params.rawDCM,num2str(s),'session_1','*MPRAGE*'));
+        anatomy = dir(fullfile(params.rawDCM,num2str(s),'*MPRAGE*'));
         for sc = 1:length({anatomy.name})
             an = strsplit(anatomy(sc).name, '_');
             scan_num(sc) = str2double(an{1});
         end
         anatomy_file = anatomy(scan_num == max(scan_num)).name;
         
-        if ~exist(fullfile(params.experimentDir,num2str(s),'session_1',params.anatomyFolder,[num2str(s),'anatomy.nii.gz'])) || params.override
-            file_dir = fullfile(params.experimentDir,num2str(s),'session_1',params.anatomyFolder);
+        if ~exist(fullfile(params.experimentDir,num2str(s),params.anatomyFolder,[num2str(s),'anatomy.nii.gz'])) || params.override
+            file_dir = fullfile(params.experimentDir,num2str(s),params.anatomyFolder);
             mkdir(fullfile(file_dir,'temp'));
-            cmd = ['dcm2niix -z y -o ' , fullfile(file_dir,'temp'),' ' fullfile(params.rawDCM,num2str(s),'session_1',anatomy_file)];
+            cmd = ['dcm2niix -z y -o ' , fullfile(file_dir,'temp'),' ' fullfile(params.rawDCM,num2str(s),anatomy_file)];
             system(cmd);
             image = dir(fullfile(file_dir,'temp', '*.nii.gz'))
             movefile(fullfile(file_dir,'temp',image(1).name),fullfile(file_dir,[num2str(s),'anatomy','.nii.gz']));
@@ -40,34 +41,32 @@ for s=params.subjects
         condNumRum = 0;
         for i=1:length(scans)
             scan=strsplit(scans{i}, '_');
-            if strcmp(scan{2},'cmrr') && length(scan)==5
+            if strcmp(scan{2},'cmrr') && length(scan)==6
                 condNumRum = condNumRum + 1;
+                scanNum = str2double(scan{1});
                 runType = scan{5};
-                % runNum = str2double(scan{1});
-                runNum = scan{6};
-                file_name = sprintf('sub%d_%s_%d.nii.gz',s, runType, condNumRum);
+                scanNum = str2double(scan{1});
+                runNum = str2double(scan{6});
+                file_name = sprintf('sub%d_%s_%d.nii.gz',s, runType, runNum);
                 file_dir = fullfile(params.experimentDir,...
                                     num2str(s),...
-                                    'session_1',...
                                     params.functionalFolder,...
-                                    params.conditions(order(runNum)))
+                                    params.conditions(order(scanNum)))
                 if ~exist(fullfile(file_dir,file_name),'file') || params.override
                     mkdir(fullfile(file_dir,'temp'));
-                    cmd = ['dcm2niix -z y -o ' ,...
+                    cmd = sprintf('dcm2niix -z y -o %s %s',...
                            fullfile(file_dir,'temp'),...
-                           ' ', ...
                            fullfile(params.rawDCM,num2str(s),...
-                                        'session_1',...
-                                        scans{i})]
+                                        scans{i}))
                     system(cmd);
                     image = dir(fullfile(file_dir,'temp', '*.nii.gz'));
                     from =fullfile(file_dir, 'temp', image(1).name)
                     to = fullfile(file_dir, file_name)
                     movefile(from, to);
                     rmdir(fullfile(file_dir,'temp'), 's');
+                    printToLog(params, s, sprintf(fid, "extracted and renamed %s --> %s", from, to));
                 end
             end
         end
     end
-end
 end

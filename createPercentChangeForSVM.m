@@ -20,16 +20,16 @@ for session = 1:length(params.conditions)
         end
         for s=1:length(params.subjects)
             tic
-            disp(['analysing sub ', num2str(params.subjects(s)),' session ' ,num2str(session) , ' condition ', params.conditions{session}{con}]);
+            disp(['analysing sub ', num2str(params.subjects(s)), ' condition ', params.conditions{session}{con}]);
             if ~exist(fullfile(params.outDir,[num2str(params.subjects(s)),'_',cond,params.saveName]),'file') || params.override
                 rh=1; %%zero counter!
                 lh=1; %%zero counter!
                 data_rh=zeros(10,size(linearIndex,1));
                 data_lh=zeros(10,size(linearIndex,1));
-                EV_dir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),['session',num2str(session)],'EVs');
+                EV_dir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),'EVs');
                 for r=1:params.numOfRuns
                     disp(['run ',num2str(r)])
-                    runDir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),['session',num2str(session)],params.functionalFolder,cond,['sub',num2str(params.subjects(s)),'run',num2str(r),'.feat']);
+                    runDir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),params.functionalFolder,cond,['sub',num2str(params.subjects(s)),'run',num2str(r),'.feat']);
                     if ~exist(fullfile(runDir,'filtered_func_data_MNI.nii.gz'),'file') ||params.override
                         cmd = ['applywarp -i ', (fullfile(runDir,'filtered_func_data.nii.gz')),' -o ', (fullfile(runDir,'filtered_func_data_MNI.nii.gz')), ' -r ', fullfile(runDir,'reg','standard'), ' --warp=' ,fullfile(runDir,'reg','highres2standard_warp'),' --premat=',fullfile(runDir,'reg','example_func2highres.mat')];
                         unix(cmd);

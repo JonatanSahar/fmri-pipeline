@@ -36,9 +36,9 @@ function params=setAnalysisParams()
 
     subjectDir    = fullfile(params.experimentDir,"%d")
     sessionDir    = fullfile(subjectDir,'session_1');
-    anatomyDir    = fullfile(sessionDir,'anatomy');
-    EVDir         = fullfile(sessionDir,'EVs');
-    functionalDir = fullfile(sessionDir,'functional');
+    anatomyDir    = fullfile(subjectDir,'anatomy');
+    EVDir         = fullfile(subjectDir,'EVs');
+    functionalDir = fullfile(subjectDir,'functional');
 
     params.sessionDir    =  strrep(sessionDir, "\", "\\");
     params.EVDir         =  strrep(EVDir, "\", "\\");
@@ -60,7 +60,7 @@ function params=setAnalysisParams()
     % params.alt_DCM_order = {[4:8,1:3],[4:8,1:3]};
     % params.alt_DCM_order(2,:) = {[],[]};
 
-    params.override = 1;
+    params.override = 0;
 
     %%FEAt params
     params.fieldMap=0;
