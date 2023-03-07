@@ -25,8 +25,8 @@ function splitEventTable(T, condition, output_name_prefix, output_dir)
 
 
     for condName = conditionNames
-        table = array2table(T{idx.(condName), :},'VariableNames', T.Properties.VariableNames);
-        table = table(:, fields_to_keep);
+        newT = array2table(T{idx.(condName), :},'VariableNames', T.Properties.VariableNames);
+        newT = table(:, fields_to_keep);
 
 
         if isequal(condition, 'audiomotor')
@@ -37,8 +37,12 @@ function splitEventTable(T, condition, output_name_prefix, output_dir)
             file_name = sprintf("%s_%s", output_name_prefix, condName);
         end
 
-        save(fullfile(output_dir, file_name), "table");
-        writetable(table, fullfile(output_dir, file_name), 'Delimiter','tab', 'WriteVariableNames', false);
+        if size(newT, 1) < 1
+            for field = fields_to_keep
+            newT.(field)(1) = 0;
+        end
+        save(fullfile(output_dir, file_name), "newT");
+        writetable(newT, fullfile(output_dir, file_name), 'Delimiter','tab', 'WriteVariableNames', false);
 
     end
 
