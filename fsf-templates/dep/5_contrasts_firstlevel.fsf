@@ -36,7 +36,7 @@ set fmri(outputdir) "out_dir"
 set fmri(tr) 1.000000
 
 # Total volumes
-set fmri(npts) 388
+set fmri(npts) 348
 
 # Delete volumes
 set fmri(ndelete) 0
@@ -158,8 +158,8 @@ set fmri(evs_real) 5
 set fmri(evs_vox) 0
 
 # Number of contrasts
-set fmri(ncon_orig) 2
-set fmri(ncon_real) 2
+set fmri(ncon_orig) 5
+set fmri(ncon_real) 5
 
 # Number of F-tests
 set fmri(nftests_orig) 0
@@ -239,13 +239,13 @@ set fmri(reghighres_search) 90
 set fmri(reghighres_dof) BBR
 
 # Registration to standard image?
-set fmri(regstandard_yn) is_normalized
+set fmri(regstandard_yn) 1
 
 # Use alternate reference images?
 set fmri(alternateReference_yn) 0
 
 # Standard image
-set fmri(regstandard) "templates_dir"
+set fmri(regstandard) "/home/user/fsl/data/standard/MNI152_T1_2mm_brain"
 
 # Search space for registration to standard space
 # 0   : No search
@@ -266,20 +266,20 @@ set fmri(regstandard_nonlinear_warpres) 10
 set fmri(paradigm_hp) 100
 
 # Total voxels
-set fmri(totalVoxels) 311492608
+set fmri(totalVoxels) 279379968
 
 
 # Number of lower-level copes feeding into higher-level analysis
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "nii_file_path_no_extension"
+set feat_files(1) "/media/user/Data/fmri-data/analysis-output/102/functional/audiomotor/sub102_audiomotor_2"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
 
 # Subject's structural image for analysis 1
-set highres_files(1) "anatomy_dir"
+set highres_files(1) "/media/user/Data/fmri-data/analysis-output/102/anatomy/102anatomy_brain"
 
 # EV 1 title
 set fmri(evtitle1) "right"
@@ -314,7 +314,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "right_ev"
+set fmri(custom1) "/media/user/Data/fmri-data/analysis-output/102/EVs/102_EV_audiomotor_2_LE_RH.txt"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -361,7 +361,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "left_ev"
+set fmri(custom2) "/media/user/Data/fmri-data/analysis-output/102/EVs/102_EV_audiomotor_2_LE_LH.txt"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -408,7 +408,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 0
 
 # Custom EV file (EV 3)
-set fmri(custom3) "disq_ev"
+set fmri(custom3) "/media/user/Data/fmri-data/analysis-output/102/EVs/102_EV_audiomotor_2_LE_DISQ.txt"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0
@@ -470,6 +470,69 @@ set fmri(con_real2.4) 0
 # Real contrast_real vector 2 element 5
 set fmri(con_real2.5) 0
 
+# Display images for contrast_real 3
+set fmri(conpic_real.3) 1
+
+# Title for contrast_real 3
+set fmri(conname_real.3) "right"
+
+# Real contrast_real vector 3 element 1
+set fmri(con_real3.1) 1
+
+# Real contrast_real vector 3 element 2
+set fmri(con_real3.2) 0
+
+# Real contrast_real vector 3 element 3
+set fmri(con_real3.3) 0
+
+# Real contrast_real vector 3 element 4
+set fmri(con_real3.4) 0
+
+# Real contrast_real vector 3 element 5
+set fmri(con_real3.5) 0
+
+# Display images for contrast_real 4
+set fmri(conpic_real.4) 1
+
+# Title for contrast_real 4
+set fmri(conname_real.4) "left"
+
+# Real contrast_real vector 4 element 1
+set fmri(con_real4.1) 0
+
+# Real contrast_real vector 4 element 2
+set fmri(con_real4.2) 0
+
+# Real contrast_real vector 4 element 3
+set fmri(con_real4.3) 1
+
+# Real contrast_real vector 4 element 4
+set fmri(con_real4.4) 0
+
+# Real contrast_real vector 4 element 5
+set fmri(con_real4.5) 0
+
+# Display images for contrast_real 5
+set fmri(conpic_real.5) 1
+
+# Title for contrast_real 5
+set fmri(conname_real.5) "auditory"
+
+# Real contrast_real vector 5 element 1
+set fmri(con_real5.1) 1
+
+# Real contrast_real vector 5 element 2
+set fmri(con_real5.2) 0
+
+# Real contrast_real vector 5 element 3
+set fmri(con_real5.3) 1
+
+# Real contrast_real vector 5 element 4
+set fmri(con_real5.4) 0
+
+# Real contrast_real vector 5 element 5
+set fmri(con_real5.5) 0
+
 # Display images for contrast_orig 1
 set fmri(conpic_orig.1) 1
 
@@ -500,14 +563,113 @@ set fmri(con_orig2.2) 1
 # Real contrast_orig vector 2 element 3
 set fmri(con_orig2.3) 0
 
+# Display images for contrast_orig 3
+set fmri(conpic_orig.3) 1
+
+# Title for contrast_orig 3
+set fmri(conname_orig.3) "right"
+
+# Real contrast_orig vector 3 element 1
+set fmri(con_orig3.1) 1
+
+# Real contrast_orig vector 3 element 2
+set fmri(con_orig3.2) 0
+
+# Real contrast_orig vector 3 element 3
+set fmri(con_orig3.3) 0
+
+# Display images for contrast_orig 4
+set fmri(conpic_orig.4) 1
+
+# Title for contrast_orig 4
+set fmri(conname_orig.4) "left"
+
+# Real contrast_orig vector 4 element 1
+set fmri(con_orig4.1) 0
+
+# Real contrast_orig vector 4 element 2
+set fmri(con_orig4.2) 1
+
+# Real contrast_orig vector 4 element 3
+set fmri(con_orig4.3) 0
+
+# Display images for contrast_orig 5
+set fmri(conpic_orig.5) 1
+
+# Title for contrast_orig 5
+set fmri(conname_orig.5) "auditory"
+
+# Real contrast_orig vector 5 element 1
+set fmri(con_orig5.1) 1
+
+# Real contrast_orig vector 5 element 2
+set fmri(con_orig5.2) 1
+
+# Real contrast_orig vector 5 element 3
+set fmri(con_orig5.3) 0
+
 # Contrast masking - use >0 instead of thresholding?
 set fmri(conmask_zerothresh_yn) 0
 
 # Mask real contrast/F-test 1 with real contrast/F-test 2?
 set fmri(conmask1_2) 0
 
+# Mask real contrast/F-test 1 with real contrast/F-test 3?
+set fmri(conmask1_3) 0
+
+# Mask real contrast/F-test 1 with real contrast/F-test 4?
+set fmri(conmask1_4) 0
+
+# Mask real contrast/F-test 1 with real contrast/F-test 5?
+set fmri(conmask1_5) 0
+
 # Mask real contrast/F-test 2 with real contrast/F-test 1?
 set fmri(conmask2_1) 0
+
+# Mask real contrast/F-test 2 with real contrast/F-test 3?
+set fmri(conmask2_3) 0
+
+# Mask real contrast/F-test 2 with real contrast/F-test 4?
+set fmri(conmask2_4) 0
+
+# Mask real contrast/F-test 2 with real contrast/F-test 5?
+set fmri(conmask2_5) 0
+
+# Mask real contrast/F-test 3 with real contrast/F-test 1?
+set fmri(conmask3_1) 0
+
+# Mask real contrast/F-test 3 with real contrast/F-test 2?
+set fmri(conmask3_2) 0
+
+# Mask real contrast/F-test 3 with real contrast/F-test 4?
+set fmri(conmask3_4) 0
+
+# Mask real contrast/F-test 3 with real contrast/F-test 5?
+set fmri(conmask3_5) 0
+
+# Mask real contrast/F-test 4 with real contrast/F-test 1?
+set fmri(conmask4_1) 0
+
+# Mask real contrast/F-test 4 with real contrast/F-test 2?
+set fmri(conmask4_2) 0
+
+# Mask real contrast/F-test 4 with real contrast/F-test 3?
+set fmri(conmask4_3) 0
+
+# Mask real contrast/F-test 4 with real contrast/F-test 5?
+set fmri(conmask4_5) 0
+
+# Mask real contrast/F-test 5 with real contrast/F-test 1?
+set fmri(conmask5_1) 0
+
+# Mask real contrast/F-test 5 with real contrast/F-test 2?
+set fmri(conmask5_2) 0
+
+# Mask real contrast/F-test 5 with real contrast/F-test 3?
+set fmri(conmask5_3) 0
+
+# Mask real contrast/F-test 5 with real contrast/F-test 4?
+set fmri(conmask5_4) 0
 
 # Do contrast masking at all?
 set fmri(conmask1_1) 0

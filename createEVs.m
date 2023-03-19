@@ -1,8 +1,6 @@
 function createEVs(params)
 %create EVs based on the randomized block order, and save in the results directory
 % returns number of disqualified blcoks in each condition in params
-T = table();
-%% MAIN LOOP
     for subId = params.subjects
         EV_dir=fullfile(params.experimentDir,num2str(subId),'EVs');
         if ~exist(EV_dir)
@@ -19,7 +17,7 @@ T = table();
                 tableFileName = fullfile(params.rawBehavioral, ...
                                          num2str(subId), ...
                                          tableFileName);
-                t = load(tableFileName)
+               t = load(tableFileName);
                 t = t.eventTable;
 
                 events_str = sprintf("%d_EV_%s_%d",...

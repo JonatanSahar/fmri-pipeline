@@ -17,10 +17,10 @@ brainExtraction(params);
 %% create EVs
 createEVs(params);  % creates EVs for all conditions
 %% pre-processing and first level
-p = gcp('nocreate');
-if numel(p) ==0
-    pool   = parpool('local'); %activate parallel mode
-end
+% p = gcp('nocreate');
+% if numel(p) ==0
+%     pool   = parpool('local'); %activate parallel mode
+% end
 runPreProcessing(params);
 
 %% Second level analysis

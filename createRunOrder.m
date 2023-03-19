@@ -5,7 +5,9 @@ function createRunOrder(params)
             scans={scans(find([scans.isdir])).name};
             scans(ismember(scans,{'.','..','ignore'}))=[];
             scans = scans(cellfun('isempty', strfind(scans,'SBRef')))
+            scans = scans(cellfun('isempty', strfind(scans,'ignore')))
 
+            
             % the scan files by their numeric order
             [~,ind]= sort( str2double( regexp( scans, '\d+', 'match', 'once' )));
             scans = scans(ind);

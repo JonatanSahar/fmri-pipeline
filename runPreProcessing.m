@@ -3,7 +3,7 @@ function runPreProcessing(params)
 %% RUN FEAT
 
 for subId=params.subjects
-    disp(['analysing subject number: ',num2str(subId)]);
+    % disp(['analysing subject number: ',num2str(subId)]);
     functionalDir = sprintf(params.functionalDir, subId);
     anatomyDir = sprintf(params.anatomyDir, subId);
 
@@ -16,7 +16,7 @@ for subId=params.subjects
             continue
         end
         for condRunNum = 1:numRuns
-            fprintf('condition: %s, run#: %d\n', cond, condRunNum);
+            % fprintf('condition: %s, run#: %d\n', cond, condRunNum);
             cond_str = base_str;
             if contains(cond, 'audiomotor')
                 cond_str = base_str + "_*E";
@@ -32,7 +32,7 @@ for subId=params.subjects
                                           cond, ...
                                           condRunNum);
                 else
-                    str = cond_str + "_%s%s.txt"
+                    str = cond_str + "_%s%s.txt";
                     if contains(cond, 'motor')
                         affector_suffix = 'H';
                     elseif contains(cond, 'auditory')
@@ -46,20 +46,21 @@ for subId=params.subjects
                                           affector_suffix);
                 end
                 EVDir = sprintf(params.EVDir, subId);
-                d = dir(fullfile(EVDir,EV_filename))
-                EVPath = fullfile(d.folder, d.name)
+                d = dir(fullfile(EVDir,EV_filename));
+                EVPath = fullfile(d.folder, d.name);
                 EVPaths.(side) = EVPath;
             end % for side
 
 
 
             % distribute fsf files in functional dirs and run first level Feat
-            if contains(cond, 'Loc')
-                fid = fopen(fullfile("./fsf-templates", 'localizer.fsf')) ;
-            else
-                fid = fopen(fullfile("./fsf-templates", 'MRI_data.fsf')) ;
-            end
+            % if contains(cond, 'Loc')
+            %     fid = fopen(fullfile("./fsf-templates", 'localizer.fsf')) ;
+            % else
+            %     fid = fopen(fullfile("./fsf-templates", 'MRI_data.fsf')) ;
+            % end
 
+            fid = fopen(fullfile("./fsf-templates", 'firstLevelTemplate.fsf')) ;
             X = fread(fid) ;
             fclose(fid) ;
             X = char(X.') ;
@@ -79,7 +80,7 @@ for subId=params.subjects
                 scanBaseNameWithEar = sprintf("%s_%s", scanBaseName, ear);
                 outputDirPath = fullfile(functionalDir, scanBaseNameWithEar);
             end
-            anatomyFileName = sprintf("%danatomy_brain", subId)
+            anatomyFileName = sprintf("%danatomy_brain", subId);
             anatomyScanPath = fullfile(anatomyDir, anatomyFileName);
 
             Y = strrep(X, 'nii_file_path_no_extension', scanPath);
@@ -103,7 +104,9 @@ for subId=params.subjects
             fclose (fid) ;
             cmd = sprintf('feat %s', fsfPath);
             fprintf("%s\n", cmd);
-            unix(cmd);
+            printToLog(params, subId, cmd);
+            % input('press enter...');
+            % unix(cmd);
             % unix(['firefox ', fullfile(featDir, 'report_log.html')]);
             % unix('rm ', fsfPath);
         end % for condRunNum

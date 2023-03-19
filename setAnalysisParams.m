@@ -24,15 +24,11 @@ function params=setAnalysisParams()
 
 
     params.conditions = ["motorLoc", "auditoryLoc", "audiomotor"];
-    % params.conditions = ["motor_loc", "auditory_loc", "audiomotor"];
     params.numRunsPerCondition = [2, 2, 4];
-
-    % params.conditionsInOrder = [1,2,3,3];
     params.conditionsInOrder = [1, 1, 2, 2, 3, 3, 3, 3];
-    params.sides = {'R', 'L'}
-    params.runNumsLocalizers = [1:2];
-    params.runNumsAudiomotor = [1:4];
-    params.run_nums = [params.runNumsLocalizers, params.runNumsLocalizers, params.runNumsAudiomotor];
+
+    % params.conditions = ["auditoryLoc"];
+    % params.numRunsPerCondition = [1];
 
     subjectDir    = fullfile(params.experimentDir,"%d")
     sessionDir    = fullfile(subjectDir,'session_1');

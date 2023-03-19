@@ -30,13 +30,13 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "/media/user/Data/fmri-data/analysis-output/100/session_1/functional/sub100_motorLoc_run_1"
+set fmri(outputdir) "out_dir"
 
 # TR(s)
-set fmri(tr) 1.000000 
+set fmri(tr) 1.000000
 
 # Total volumes
-set fmri(npts) 388
+set fmri(npts) 348
 
 # Delete volumes
 set fmri(ndelete) 0
@@ -109,7 +109,7 @@ set fmri(st_file) ""
 set fmri(bet_yn) 1
 
 # Spatial smoothing FWHM (mm)
-set fmri(smooth) 5
+set fmri(smooth) smoothing_param
 
 # Intensity normalization
 set fmri(norm_yn) 0
@@ -239,13 +239,13 @@ set fmri(reghighres_search) 90
 set fmri(reghighres_dof) BBR
 
 # Registration to standard image?
-set fmri(regstandard_yn) 1
+set fmri(regstandard_yn) is_normalized
 
 # Use alternate reference images?
 set fmri(alternateReference_yn) 0
 
 # Standard image
-set fmri(regstandard) "/home/user/fsl/data/standard/MNI152_T1_2mm_brain"
+set fmri(regstandard) "templates_dir"
 
 # Search space for registration to standard space
 # 0   : No search
@@ -273,13 +273,13 @@ set fmri(totalVoxels) 311492608
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "/media/user/Data/fmri-data/analysis-output/100/session_1/functional/motorLoc/sub100_motorLoc_run_1.nii.gz"
+set feat_files(1) "nii_file_path_no_extension"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
 
 # Subject's structural image for analysis 1
-set highres_files(1) "/media/user/Data/fmri-data/analysis-output/100/session_1/anatomy/100anatomy_brain"
+set highres_files(1) "anatomy_dir"
 
 # EV 1 title
 set fmri(evtitle1) "right"
@@ -314,7 +314,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "/media/user/Data/fmri-data/analysis-output/100/session_1/EVs/100_EV_motorLoc_1_RH.txt"
+set fmri(custom1) "right_ev"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -361,7 +361,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "/media/user/Data/fmri-data/analysis-output/100/session_1/EVs/100_EV_motorLoc_1_LH.txt"
+set fmri(custom2) "left_ev"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -408,7 +408,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 0
 
 # Custom EV file (EV 3)
-set fmri(custom3) "/media/user/Data/fmri-data/analysis-output/100/session_1/EVs/100_EV_motorLoc_1_DISQ.txt"
+set fmri(custom3) "disq_ev"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0

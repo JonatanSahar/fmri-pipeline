@@ -6,6 +6,7 @@ for s=params.subjects
         scans={scans(find([scans.isdir])).name};
         scans(ismember(scans,{'.','..','ignore'}))=[];
         scans = scans(cellfun('isempty', strfind(scans,'SBRef')));
+        scans = scans(cellfun('isempty', strfind(scans,'ignore')));
         try
             load(fullfile(params.rawBehavioral,num2str(s),'trialOrder.mat'));
             order = trialOrder;
@@ -64,7 +65,7 @@ for s=params.subjects
                     to = fullfile(file_dir, file_name)
                     movefile(from, to);
                     rmdir(fullfile(file_dir,'temp'), 's');
-                    printToLog(params, s, sprintf(fid, "extracted and renamed %s --> %s", from, to));
+                    printToLog(params, s, sprintf("extracted and renamed %s --> %s", from, to));
                 end
             end
         end
