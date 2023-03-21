@@ -1,4 +1,4 @@
-function createMVPAparams(Data)
+function createMVPAparams(params, data)
     if ~exist(params.outDir)
         mkdir(params.outDir)
     end
@@ -10,59 +10,103 @@ function createMVPAparams(Data)
     linearIndex=find(maskImg.data);
     [x,y,z]=ind2sub(size(maskImg.data),linearIndex);
     locations=[x,y,z];
-    idx = knnsearch(locations, locations, 'K', params.beamSize); % Find all neighbours in the mask
+    beamMembersIdx = knnsearch(locations, locations, 'K', params.beamSize); % Find all neighbours in the mask
 
     %% load data for each condition and create svm files
     base_str = "%d_EV_audiomotor_%d_%sE_%sH.txt";
-    log_str = "%d_audiomotor_%d_%sE_%sH.txt";
+    log_str = "%d_audiomotor_%d_log.mat";
     ears = [L, R];
     for ear = ears
-        for condId = 1:length(params.conditions)
-            cond = params.conditions(condId);
-            numRuns = params.numRunsPerCondition(condId);
-            if ~contains(cond, 'audiomotor')
-                continue
+        % only compute this for experimental runs
+        numRuns = params.numRunsPerCondition(params.conditions == "audiomotor")
+
+        for subId=params.subjects
+            functionalDir = sprintf(params.functionalDir, subId);
+            hands = ["L", "R"];
+            for hand = hands
+                for runNumber = 1:numRuns
+                    featDir = fullfile(functionalDir, ...
+                                       sprintf("sub%d_audiomotor_%d_%sE.feat", ...
+                                               subId, ...
+                                               runNumber, ...
+                                               ear));
+                    EVDir = sprintf(params.EVDir, subId);
+                    EV_filename = sprintf(base_str, ...
+                                          subId,...
+                                          runNumber,...
+                                          ear,...
+                                          hand);
+                    d = dir(fullfile(EVDir,EV_filename));
+
+                    % this runNum really had auditory input to this ear
+                    if ~d.name; continue; end
+
+                    EVPath = fullfile(d.folder, d.name);
+                    logFileName = sprintf(log_str, ...
+                                          subId,...
+                                          runNumber);
+
+                    logFilePath = fullfile(d.folder, logFileName);
+
+                    % transform the scan to MNI space
+                    tranformFeatDirToMNI(featDir)
+
+                    % calculate percent-signal-change
+                    functionalData = calcPercentSignalChange(featDir)
+
+                    %get TRs where we sample the data
+                    log = load(logFilePath)
+                    TRs = log.block_end_times;
+                    tempData = percentChangeData(:,:,:,TRs);
+                    allData.(hand) = tempData(linearIndex);
+                end % for runNumber
+            end % for hand
+
+            % equalize sample number between hands
+            RHSamples = size(allData.R,1);
+            LHSamples = size(allData.L,1);
+            numToTrim = abs(RHSamples - LHSamples);
+            removeIdx = datasample(1:min(RHSamples, ...
+                                         LHSamples), ...
+                                   numToTrim, ...
+                                   'Replace', ...
+                                   false);
+            mask = ones(1, max(RHSamples, LHSamples));
+            mask(removeIdx) = 0;
+            if RHSamples > LHSamples
+                allData.R = allData.R(mask > 0,:);
+            else
+                allData.L= allData.L(mask > 0,:);
+            end
+            RHSamples = size(allData.R,1);
+            LHSamples = size(allData.L,1);
+
+            % construct labels and factor
+            tempData=[allData.R; allData.L];
+
+            % 1 = RH; 2 = LH
+            labels=[ones(RHSamples,1);ones(LHSamples,1) * 2];
+            factor=ones(1,length(labels));
+
+            % construct the final data matrix
+            data=zeros(length(labels),params.beamSize,length(linearIndex));
+            for centralVoxelIdx=1:length(linearIndex)
+                data(:,:,centralVoxelIdx) = ...
+                    tempData(:,beamMembersIdx(centralVoxelIdx,:));
             end
 
-            for subId=params.subjects
-                functionalDir = sprintf(params.functionalDir, subId);
-                anatomyDir = sprintf(params.anatomyDir, subId);
-                % sub102_audiomotor_1_RE.feat
-                hands = ["L", "R"];
-                for hand = hands
-                    for condRunNum = 1:numRuns
-                        featDir = fullfile(functionalDir, sprintf("sub%d_audiomotor_%d_%sE.feat", subId, condRunNum, ear));
-                        EV_filename = sprintf(str,...
-                                              subId,...
-                                              condRunNum,...
-                                              ear,...
-                                              hand);
-                        EVDir = sprintf(params.EVDir, subId);
-                        d = dir(fullfile(EVDir,EV_filename));
-                        % this runNum really had auditory input to this ear
-                        if d.name
-                            EVPath = fullfile(d.folder, d.name);
-                            logFileName = sprintf(log_str, ...
-                                                  subId,...
-                                                  condRunNum,...
-                                                  ear,...
-                                                  hand);
-                            logFilePath = fullfile(EVDir, logFileName);
-
-                            EVPaths.(side) = EVPath;
-                            logFilePaths.(side) = logFilePath;
-                        end
-
-                        % transform the scan to MNI space
-                        tranformFeatDirToMNI(featDir)
-                        % calculate percent-signal-change
-                        funcData=niftiread(fullfile(runDir,'filtered_func_data_MNI.nii.gz'));
-                        percentChangeData=funcData./mean(funcData,4)*100-100;
-                        log =
-                    end % for hand
-                end % for condRunNum
-            end % for subId
-        end % for condId
+            % write to file
+            save(fullfile(params.outDir, ...
+                          sprintf("%d_MPVA_audiomotor_%sE", subId, ear)), ...
+                 'data', ...
+                 'factor', ...
+                 'labels', ...
+                 'locations', ...
+                 'linearIndex', ...
+                 'params', ...
+                 'maskImg', ...
+                 '-v7.3');
+        end % for subId
     end % for ear
 end
 
@@ -93,7 +137,12 @@ function tranformFeatDirToMNI(featDir)
               ' ', ...
               cond, ...
               ' condition run ', ...
-              num2str(condRunNum), ...
+              num2str(runNumber), ...
               ' already exist']);
     end
+end
+
+function calcPercentSignalChange(featDir)
+    functionalData = niftiread(fullfile(featDir,'filtered_func_data_MNI.nii.gz'));
+    percentChangeData=functionalData./mean(funcData,4)*100-100;
 end
