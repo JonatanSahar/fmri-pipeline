@@ -44,7 +44,6 @@ function params=setAnalysisParams()
 
     for sub = 1:length(params.subjects)
         if false
-            % was: if params.subjects(sub) == 101 || params.subjects(sub) == 102
             params.alt_DCM_order{1,sub} = [4:8,1:3];
         else
             params.alt_DCM_order{1,sub} = [];
@@ -71,6 +70,7 @@ function params=setAnalysisParams()
     %mask variables
     params.mask.name='commonAllSubs.nii.gz';
     params.mask.dir=fullfile(params.mainDir,params.expName);
+    params.mask.dir= '/home/user/fsl/data/standard/MNI152_T1_1mm_brain_mask.nii.gz'
     %save variables
     params.saveName='_tr10.mat';
     params.outDir=fullfile(params.mainDir,params.expName,'forSVM');

@@ -12,6 +12,36 @@ linearIndex=find(maskImg.data);
 locations=[x,y,z];
 idx = knnsearch(locations, locations, 'K', params.beamSize); % Find all neighbours in the mask
 %% load data for each condition and create svm files
+% for each session
+%     for each condition
+%         skip localizers
+%         for each subject
+%             for each conditionRun
+%                 get the correct EV file
+%                 get the feat dir (first level)
+%                 apply the transform to MNI:
+%                 ## /Code
+
+% if ~exist(fullfile(runDir,'filtered_func_data_MNI.nii.gz'),'file') ||params.override
+%     cmd = ['applywarp -i ', (fullfile(runDir,'filtered_func_data.nii.gz')),' -o ', (fullfile(runDir,'filtered_func_data_MNI.nii.gz')), ' -r ', fullfile(runDir,'reg','standard'), ' --warp=' ,fullfile(runDir,'reg','highres2standard_warp'),' --premat=',fullfile(runDir,'reg','example_func2highres.mat')];
+%     unix(cmd);
+%     disp(['finished MNI transform for sub ', num2str(params.subjects(s)),' ',cond,' condition run ',num2str(r)]);
+% else
+%     disp(['MNI transform for sub ', num2str(params.subjects(s)),' ',cond,' condition run ',num2str(r),' already exist']);
+%                 ## Code/
+
+%                 read in the transformed data and calculate the percent signal change:
+
+% funcData=niftiread(fullfile(runDir,'filtered_func_data_MNI.nii.gz'));
+%                     funcInfo=niftiinfo(fullfile(runDir,'filtered_func_data_MNI.nii.gz'));
+%                     percentChangeData=funcData./mean(funcData,4)*100-100;
+
+%                     take only the data at the TR times we want to look at from the EV file
+%                     flatten RH data and LH data seprately
+%                     trim either RH or LH data so they are the same length
+%                     create lables and factor vectors
+%                     create the data matrix: numBlocks x numBeams x beamSize
+
 for session = 1:length(params.conditions)
     for con=1:length(params.conditions{session})
         cond=params.conditions{session}{con};
@@ -20,16 +50,16 @@ for session = 1:length(params.conditions)
         end
         for s=1:length(params.subjects)
             tic
-            disp(['analysing sub ', num2str(params.subjects(s)), ' condition ', params.conditions{session}{con}]);
+            disp(['analysing sub ', num2str(params.subjects(s)),' session ' ,num2str(session) , ' condition ', params.conditions{session}{con}]);
             if ~exist(fullfile(params.outDir,[num2str(params.subjects(s)),'_',cond,params.saveName]),'file') || params.override
                 rh=1; %%zero counter!
                 lh=1; %%zero counter!
                 data_rh=zeros(10,size(linearIndex,1));
                 data_lh=zeros(10,size(linearIndex,1));
-                EV_dir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),'EVs');
+                EV_dir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),['session',num2str(session)],'EVs');
                 for r=1:params.numOfRuns
                     disp(['run ',num2str(r)])
-                    runDir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),params.functionalFolder,cond,['sub',num2str(params.subjects(s)),'run',num2str(r),'.feat']);
+                    runDir=fullfile(params.mainDir,params.expName,num2str(params.subjects(s)),['session',num2str(session)],params.functionalFolder,cond,['sub',num2str(params.subjects(s)),'run',num2str(r),'.feat']);
                     if ~exist(fullfile(runDir,'filtered_func_data_MNI.nii.gz'),'file') ||params.override
                         cmd = ['applywarp -i ', (fullfile(runDir,'filtered_func_data.nii.gz')),' -o ', (fullfile(runDir,'filtered_func_data_MNI.nii.gz')), ' -r ', fullfile(runDir,'reg','standard'), ' --warp=' ,fullfile(runDir,'reg','highres2standard_warp'),' --premat=',fullfile(runDir,'reg','example_func2highres.mat')];
                         unix(cmd);
