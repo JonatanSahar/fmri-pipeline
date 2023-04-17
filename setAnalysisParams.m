@@ -3,7 +3,7 @@ function params=setAnalysisParams()
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    params.subjects=[101];
+    params.subjects=[102];
     params.mainDir=params.baseDirPath;
 
     % d = dir('./data');
@@ -70,7 +70,7 @@ function params=setAnalysisParams()
     %mask variables
     params.mask.name='commonAllSubs.nii.gz';
     params.mask.dir=fullfile(params.mainDir,params.expName);
-    params.mask.dir= '/home/user/fsl/data/standard/MNI152_T1_1mm_brain_mask.nii.gz'
+    params.mask.path= '/media/user/Data/fmri-data/analysis-output/MNI-brain-mask/standard_mask.nii.gz'
     %save variables
     params.saveName='_tr10.mat';
     params.outDir=fullfile(params.mainDir,params.expName,'forSVM');
