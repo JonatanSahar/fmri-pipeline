@@ -102,15 +102,15 @@ for subId=params.subjects
             fid = fopen(fsfPath,'wt') ;
             fwrite(fid,Y) ;
             fclose (fid) ;
-            cmd = sprintf('feat %s', fsfPath);
+            cmd = sprintf('feat %s&', fsfPath);
             fprintf("%s\n", cmd);
             printToLog(params, subId, cmd);
-            % input('press enter...');
             % unix(cmd);
             % unix(['firefox ', fullfile(featDir, 'report_log.html')]);
             % unix('rm ', fsfPath);
         end % for condRunNum
     end % for condId
+    input('copy the above into the terminal and then press enter...');
     clear EVPaths
     disp(['finished subject number ',num2str(subId)]);
 end % for subId

@@ -3,7 +3,7 @@ function params=setAnalysisParams()
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    params.subjects=[102];
+    params.subjects=[104 105 106];
     params.mainDir=params.baseDirPath;
 
     % d = dir('./data');

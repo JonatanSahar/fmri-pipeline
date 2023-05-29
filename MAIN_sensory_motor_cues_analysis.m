@@ -1,7 +1,8 @@
 clear all; close all; clc;
+setenv('PATH', [getenv('PATH') ':/usr/local/fsl/bin:/home/user/mricron/:']);
+
 %%set analysis params
 params = setAnalysisParams();
-
 
 %% create folders for new subjects
 createFolders(params);
@@ -26,9 +27,10 @@ runPreProcessing(params);
 %% Second level analysis
  runSecondLevel(params);
 %% Group analysis
+
  
 %%prepare data for classification
-createCommonMask(params);
-params = createPercentChangeForSVM(params);
-params = analyse_second_lvl(params);
-
+% createCommonMask(params);
+% params = createPercentChangeForSVM(params);
+% params = analyse_second_lvl(params);
+createMVPAData(params);

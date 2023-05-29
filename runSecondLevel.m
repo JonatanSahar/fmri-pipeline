@@ -12,4 +12,6 @@ function runSecondLevel(params)
             end
         end
     end
+    fprintf("cd /media/user/Data/fmri-data/fsf-files/; for i in `seq 4`; do Feat&; done")
+    input('copy the above ^^^ into the terminal and then press enter...\n');
 end

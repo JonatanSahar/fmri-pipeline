@@ -79,7 +79,7 @@ function createMVPAData(params)
                     % at that point, and serialize it. keep them all in
                     % conditionData
                     for TRi = 1:length(TRs)
-                        t = functionalData(:,:,:,TRs(TRi));
+                        t = functionalData(:,:,:,TRi);
                         tempData(TRi, :) = t(linearIndex);
                     end
 

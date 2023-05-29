@@ -34,7 +34,7 @@ function runSecondLevelAudiomotor(params, subId, numRuns)
 
     % Call feat with the modified .fsf file
     % system(sprintf('feat %s', outputFsfFile));
-    fprintf('feat %s\n', outputFsfFile);
+    fprintf('feat %s&\n', outputFsfFile);
     end
 end
 
