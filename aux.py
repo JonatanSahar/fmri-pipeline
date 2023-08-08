@@ -115,34 +115,48 @@ if __name__ == '__main__':
 
 
 
-def loadFilesToFslEyesII(path=".", sub_id, second_level=False):
+def loadThirdLevelFilesToFslEyes(path="."):
     # phrase = input("Enter the phrase to search: ")
     print(path)
+    motor_pattern = "^motor_.*.nii"
+    auditory_pattern = "^auditory_.*.nii"
+    R_over_pattern = "E_R_over_.*.nii"
+    L_over_pattern = "E_L_over_.*.nii"
+    R_and_L_over_pattern = "E_R_and_L_over_.*.nii"
+    anatomyFile =  "/home/user/fsl/data/standard/MNI152_T1_2mm_brain.nii.gz "
 
-    R_over_L_pattern = "[0-9]+_[a-zA-Z]+_[0-9]_R_over_L"
-    L_over_R_pattern = "[0-9]+_[a-zA-Z]+_[0-9]_L_over_R"
-    anatomyFile = find_anatomy_file(path) + " "
-    if second_level:
-        R_over_L_pattern = "mean_R_over_L.nii"
-        L_over_R_pattern = "mean_L_over_R.nii"
-        anatomyFile =  "/home/user/fsl/data/standard/MNI152_T1_2mm_brain.nii.gz "
-        file_paths1 = glob.glob("/media/user/Data/fmri-data/analysis-output/10[1456]/functional/10*_audiomotor_LE_mean.gfeat/cope2.feat/stats/cope1.nii.gz")
-        file_paths2 = glob.glob("/media/user/Data/fmri-data/analysis-output/10[1456]/functional/10*_audiomotor_LE_mean.gfeat/cope2.feat/stats/cope1.nii.gz")
+    file_paths = []
+    for file_path in find_files_with_regex(motor_pattern, path):
+        file_paths.append(file_path + " -dr 2.8 5 -cm pink ")
+    for file_path in find_files_with_regex(auditory_pattern, path):
+        file_paths.append(file_path + " -dr 2.8 5 -cm brain_colours_bluegray")
+    for file_path in find_files_with_regex(R_over_pattern, path):
+        file_paths.append(file_path + " -dr 2.8 5 -cm red-yellow ")
+    for file_path in find_files_with_regex(L_over_pattern, path):
+        file_paths.append(file_path + " -dr 2.8 5 -cm blue-lightblue ")
+    for file_path in find_files_with_regex(R_and_L_over_pattern, path):
+        file_paths.append(file_path + " -dr 2.8 5 -cm green")
 
-    file_paths1 = []
-    for file_path in find_files_with_regex(R_over_L_pattern, path):
-        file_paths1.append(file_path + " -dr 2.8 5 -cm red-yellow ")
-        str1 = ' '.join(file_paths1)
-
-    file_paths2 = []
-    for file_path in find_files_with_regex(L_over_R_pattern, path):
-        file_paths2.append(file_path + " -dr 2.8 5 -cm blue-lightblue ")
-        str2 = ' '.join(file_paths2)
-
-    file_paths = file_paths1 + file_paths2
-    file_paths = sorted(file_paths)
+    # file_paths = file_paths1 + file_paths2 + file_paths3 + file_paths4
+    # file_paths = sorted(file_paths)
     str  = ' '.join(file_paths)
     cmd = "fsleyes " + anatomyFile + str
 
     print(cmd)
     os.system(cmd)
+
+def copy_3rd_level_files_to_new_names(root_dir="."):
+    path = f"/media/user/Data/fmri-data/analysis-output/third-level-results"
+    root_dir = path
+    pattern = "(.*).gfeat"
+    for root, dirs, files in os.walk(root_dir):
+        if re.search("gfeat", root):
+                    matches = re.search(pattern, root)
+                    condition = matches[1]
+        for filename in files:
+            if filename == 'tstat1.nii.gz':
+                new_filename = f"{condition}.nii.gz"
+                new_file_path = os.path.join(root, new_filename)
+                shutil.copy(os.path.join(root, filename), new_file_path)
+                # print({root})
+                # print(new_file_path)
