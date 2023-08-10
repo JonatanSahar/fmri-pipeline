@@ -6,8 +6,9 @@ function createMVPAData(params)
 
     %% load mask and split to beams
     % maskImg.data=niftiread(fullfile(params.mask.dir,params.mask.name));
-    maskImg.data=niftiread(params.mask.path);
     % maskImg.info=niftiinfo(fullfile(params.mask.dir,params.mask.name));
+    maskImg.data=niftiread(params.mask.path);
+    maskImg.info=niftiinfo(params.mask.path);
     linearIndex=find(maskImg.data);
     [x,y,z]=ind2sub(size(maskImg.data),linearIndex);
     locations=[x,y,z];
@@ -32,17 +33,9 @@ function createMVPAData(params)
                                      subId,...
                                      ear,...
                                      hand);
-                % find all files with this ear-hand combination
+
+                % go over all files with this ear-hand combination
                 files = dir(fullfile(EVDir,EVFilename));
-
-                % check if this runNum really had auditory input to this ear
-                % should never happen
-                assert(length(files) ~= 0)
-
-                if length(files) == 0
-                    continue
-                end
-
                 for fileId = 1:length(files)
                     file = files(fileId)
                     x = file.name;

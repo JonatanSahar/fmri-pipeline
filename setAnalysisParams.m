@@ -3,9 +3,9 @@ function params=setAnalysisParams()
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    % params.subjects=[101:114];
-    params.subjects=[116];
-    params.discardedSubjects=[102, 104, 107, 113];
+    params.subjects=[103:116];
+    % params.subjects=[101:115];
+    params.discardedSubjects=[102, 104, 105, 107, 113];
     params.subjects = setdiff(params.subjects, params.discardedSubjects);
 
     params.mainDir=params.baseDirPath;
@@ -75,9 +75,13 @@ function params=setAnalysisParams()
     params.mask.name='commonAllSubs.nii.gz';
     params.mask.dir=fullfile(params.mainDir,params.expName);
     params.mask.path= '/media/user/Data/fmri-data/analysis-output/MNI-brain-mask/standard_mask.nii.gz'
+    params.leftRoiMask.path= '/media/user/Data/fmri-data/analysis-output/auditory-ROI-mask/L_auditory_cortex_mask.nii.gz'
+    params.rightRoiMask.path= '/media/user/Data/fmri-data/analysis-output/auditory-ROI-mask/R_auditory_cortex_mask.nii.gz'
+
     %save variables
     params.saveName='_tr10.mat';
-    params.outDir=fullfile(params.mainDir,params.expName,'forSVM');
+    params.outDir=fullfile(params.mainDir,params.expName,'SVM-data');
+    params.multiTOutDir=fullfile(params.mainDir,params.expName,'multi-t-data');
     params.savenii=0; %% true for multi-t analysis data
     params.useMasking=1;
 end
