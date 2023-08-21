@@ -1,12 +1,12 @@
 
-function singleSubjectMultiT(subject,condition,numShuffels,TRafterEV,type)
+function singleSubjectMultiT(subject,condition,numShuffels)
     % percent signal change output variables: "data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"
     % saved in "subId_multiT_data_and_labels.mat"
     % ⇒ condition must be one of "LE", "RE"
     P.regionSize      = 27; % sl size
     P.numShuffels     =numShuffels;
     P.multiResDirName=fullfile("../multi-t-results");
-    P.baseTmapName=[subject 'TR1_peakTR' num2str(TRafterEV) '_' type];
+    P.TmapName=sprintf("%d_%s_%d_shuffels", subject, condition, numShuffels);
     P.dataDir=fullfile(pwd,"../multi-t-data");
     P.multiDataLoc=p.dataDir;
     P.multiout_dir=P.multiResDirName;
@@ -137,8 +137,7 @@ function singleSubjectMultiT(subject,condition,numShuffels,TRafterEV,type)
             mkdir(P.multiout_dir);
         end
 
-        TmapName=[condition '_' P.baseTmapName '_' num2str(P.numShuffels) 'shuffels'];
-        outfile=fullfile(P.multiout_dir,TmapName)
+        outfile=fullfile(P.multiout_dir,P.TmapName)
         save_untouch_nii(niifile,outfile);
     end
 end
