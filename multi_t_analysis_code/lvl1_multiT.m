@@ -18,7 +18,7 @@ condToAnalyze=[12];
 % parfor s=1:length(subIDs)
 for s=1:length(subIDs)
     for cond=1:length(condToAnalyze)
-        testMultiTanalysis_semotor_pc_TR1(subIDs{s},conditions{condToAnalyze(cond)},numShuffels,TRafterEV,type)
+        singleSubjectMultiT(subIDs{s},conditions{condToAnalyze(cond)},numShuffels,TRafterEV,type)
     end
 end
 end

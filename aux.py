@@ -115,6 +115,7 @@ if __name__ == '__main__':
 
 
 
+    # file_paths = file_paths1 + file_paths2 + file_paths3 + file_paths4
 def loadThirdLevelFilesToFslEyes(path="."):
     # phrase = input("Enter the phrase to search: ")
     print(path)
@@ -137,9 +138,9 @@ def loadThirdLevelFilesToFslEyes(path="."):
     for file_path in find_files_with_regex(R_and_L_over_pattern, path):
         file_paths.append(file_path + " -dr 2.8 5 -cm green")
 
-    # file_paths = file_paths1 + file_paths2 + file_paths3 + file_paths4
     # file_paths = sorted(file_paths)
     str  = ' '.join(file_paths)
+    print("%s", file_paths)
     cmd = "fsleyes " + anatomyFile + str
 
     print(cmd)

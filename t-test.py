@@ -13,7 +13,7 @@ file_path = sys.argv[1]
 data = np.loadtxt(file_path)
 
 # Perform t-test
-t_stat, p_val = stats.ttest_1samp(data, popmean=0, alternative="greater")
+t_stat, p_val = stats.ttest_1samp(data, popmean=0, alternative="two-sided")
 
 print(f'T-statistic: {t_stat}')
 print(f'P-value: {p_val}')

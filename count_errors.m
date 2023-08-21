@@ -1,6 +1,7 @@
 function errors = count_errors()
+    params = setAnalysisParams();
     % Define the range of subject numbers
-    subject_nums = [103:106 108:114];
+    subject_nums = params.subjects;
     errorField = "TOO_MANY_EVENTS";
     errorField = "had_error";
     % Define the range of runs

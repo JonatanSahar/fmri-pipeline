@@ -3,8 +3,8 @@ function params=setAnalysisParams()
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    params.subjects=[103:116];
-    % params.subjects=[101:115];
+    params.subjects=[101:116];
+    % params.subjects=[115];
     params.discardedSubjects=[102, 104, 105, 107, 113];
     params.subjects = setdiff(params.subjects, params.discardedSubjects);
 

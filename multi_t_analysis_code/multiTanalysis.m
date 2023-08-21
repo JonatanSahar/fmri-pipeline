@@ -9,6 +9,7 @@ params.subjects={d.name};
 params.numOfRuns=4;
 numShuffels=400;
 TRafterEV=5;
+% TODO: ask Shahar
 type='mcRej_nov20';
 
 % %% create group standard mask
@@ -16,15 +17,15 @@ type='mcRej_nov20';
 % create_group_standmask(params.dataDir,subIDs)
 
 %% analyze 1st level
-subIDs={params.subjects{[1:3 5:21 23:end]}};
+subIDs={params.subjects};
 lvl1_multiT(subIDs,type,TRafterEV,numShuffels)
 
 %% Group multiT mean
-subIDs={params.subjects{[1:3 5:21 23:end]}};
-suhff='400';
-conditions={'hand','percept','ans','speeds','mapping','R_yn','L_yn','R_rt','L_rt','R_fv','L_fv','half_ans'};
+subIDs={params.subjects};
+shuff='400';
+conditions={'RE_RH','RE_LH', 'LE_RH', 'LE_LH'}; % TODO: how to use this?
 condToAnalyze=6;
-aveMultiTmap(params.dataDir,subIDs,conditions(condToAnalyze),suhff)
+aveMultiTmap(params.dataDir,subIDs,conditions(condToAnalyze),shuff)
 
 %% 2nd lvl multiT
 lvl2_multiT(params,type,TRafterEV,numShuffels)
@@ -32,7 +33,7 @@ lvl2_multiT(params,type,TRafterEV,numShuffels)
 %% FDR correction
 mapDir=fullfile(params.dataDir,['MultiGroupRes/pc_TR1_peakTR' num2str(TRafterEV) '_' 'mcRej_nov20_31N_20.06.2021']);
 cmd= ['fdr -i ' fullfile(mapDir,'half_ans_Pmap_pc_TR1_peakTR5_mcRej_nov20.nii')...
-    ' -m ' fullfile(params.dataDir,'group_stand_mask_MNI_31N.nii.gz') ' -q 0.05'];
+    ' -m ' fullfile(params.dataDir,'standard_MNI_mask.nii.gz') ' -q 0.05'];
 %% create Pmasks
 tresh=0.0001;
 create_Pval_mask(mapDir,tresh,TRafterEV)
