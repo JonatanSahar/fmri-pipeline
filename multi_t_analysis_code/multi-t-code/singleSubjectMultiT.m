@@ -1,18 +1,8 @@
-
 function singleSubjectMultiT(subject,condition,numShuffels)
     % percent signal change output variables: "data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"
     % saved in "subId_multiT_data_and_labels.mat"
     % ⇒ condition must be one of "LE", "RE"
-    P.regionSize      = 27; % sl size
-    P.numShuffels     =numShuffels;
-    P.multiResDirName=fullfile("../multi-t-results");
-    P.TmapName=sprintf("%d_%s_%d_shuffels", subject, condition, numShuffels);
-    P.dataDir=fullfile(pwd,"../multi-t-data");
-    P.multiDataLoc=p.dataDir;
-    P.multiout_dir=P.multiResDirName;
-    addpath("../multit/code/helper_functions");
-    %addpath('neuroelf');
-    addpath(fullfile("../../niiTool"));
+    addpath("./helper_functions");
     % dataDir=P.dataDir;
     % TODO: ask Shahar
     dfile=dir(fullfile(P.multiResDirName,[subject condition '*' '_' num2str(numShuffels) '.mat']));
@@ -69,7 +59,7 @@ function singleSubjectMultiT(subject,condition,numShuffels)
         % this is how you use searchlight to itirate over all rows.
         idx = knnsearch(locations, locations, 'K', P.regionSize); % neighbours
 
-        shufMatrix = createShuffMatrixFFX(data,params);
+        shufMatrix = createShuffMatrixFFX(data, P);
         %% start searchlight
         % check data for zeros
         labelsuse = labels;

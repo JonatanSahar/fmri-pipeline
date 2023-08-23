@@ -1,5 +1,5 @@
-function createMultiTData(params)
-
+function createMultiTData()
+    params = setAnalysisParams()
     if ~exist(params.multiTOutDir)
         mkdir(params.multiTOutDir)
     end
@@ -24,42 +24,41 @@ function createMultiTData(params)
     % Trial parameters
     trialLength = 16; % 16 seconds/TRs
     peakActivationTime = 8;
-    maxTrials = 10;
+    maxTrials = 20;
 
 
     %% load data for each condition
     % base_str = "%d_EV_audiomotor_%d_%sE_%sH.txt";
     % base_str = "%d_EV_audiomotor_*_%s_%s.mat";
-    base_str = "%d_EV_audiomotor_%d_*H.mat";
-    log_str = "%d_audiomotor_%d_log.mat";
+    base_str = "%d_EV_audiomotor_%d*H.mat"; %101_audiomotor_1_log.mat
+    log_str = "%d_audiomotor_%d.mat";
     ears = ["LE", "RE"];
     % only compute this for experimental runs
     for S = 1:length(params.subjects)
         subId = params.subjects(S)
         % Initialization - here because of parallel computing
-        labels_LE_LH = zeros(1,maxTrials); % LE_LH = 0;
-        labels_LE_RH = zeros(1,maxTrials); % LE_RH = 1;
-        labels_RE_LH = zeros(1,maxTrials); % RE_LH = 0;
-        labels_RE_RH = zeros(1,maxTrials); % RE_RH = 1;
-        data_LE_LH = [];
-        data_LE_RH = [];
-        data_RE_LH = [];
-        data_RE_RH = [];
+        data_LE = [];
+        data_RE = [];
         pscMatrix = [];
         metadata = [];
+        labels_RE = [];
+        labels_LE = [];
         for runNumber = [1:4]
+            labels = zeros(1,maxTrials);
             % for ear = ears
             functionalDir = sprintf(params.functionalDir, subId);
             % for runNumber = 1:numRuns
-            EVDir = sprintf(params.EVDir, subId);
-            EVFilename = sprintf(base_str, ...
-                                 subId,...
-                                 runNumber);
-            files = dir(fullfile(EVDir,EVFilename));
-            EVFile = files(1);
-            t = strsplit(EVFile.name, '_');
-            ear = t{5};
-
+            EVDir = sprintf(params.rawBehavioralSubjectDir, subId);
+            logFilename = sprintf(log_str, ...
+                                  subId,...
+                                  runNumber);
+            t = load(fullfile(EVDir,logFilename));
+            % filter out disqualified trials
+            T =  t.eventTable;
+            validIdx = T.had_error == 0;
+            T = array2table(T{validIdx, :},'VariableNames', T.Properties.VariableNames);
+            ear = sprintf("%sE",T.ear(1));
+            minTrials = maxTrials;
             % transform the scan to MNI space
             featDir = fullfile(functionalDir, ...
                                sprintf("sub%d_audiomotor_%d_%s.feat", ...
@@ -69,116 +68,66 @@ function createMultiTData(params)
             if ~exist(fullfile(featDir,'filtered_func_data_MNI.nii.gz'),'file') || params.override
                 tranformFeatDirToMNI(featDir)
             else
-                fprintf('MNI transform for sub condition already exists\n')
+                fprintf('MNI transform for subject %d run no. %d already exists\n', subId, runNumber)
             end
 
             % calculate percent-signal-change
-            pscFileName = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
+            pscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
             if ~exist(pscFileName, "file")
                 functionalDataPath = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
                 functionalData = niftiread(functionalDataPath);
                 metadata = niftiinfo(functionalDataPath);
                 pscMatrix = calcPercentSignalChange(functionalData);
+                niftiwrite(pscMatrix, pscFileName, metadata, 'Compressed',true);
             else
-                t = load (pscFileName);
-                pscMatrix = t.pscMatrix;
+                pscMatrix = niftiread(pscFileName);
             end
 
-            % Go over all files with this ear-hand combination
-            % Each file is a unique (run, hand) (run ⇒ ear)
-            for f = 1:length(files)
-                EVFile = files(f);
-                EVFile.name
-                t = strsplit(EVFile.name, '_');
-                tt = strsplit(t{6}, '.');
-                hand = tt{1};
-                EVFilePath = fullfile(EVFile.folder, EVFile.name);
+            % Get the trial start times.
+            startTimes = round(str2double(T.start_time));
+            maxScanTime = size(pscMatrix, 4);
+            % Get the average of the activation along the trial
+            % trialData = pscMatrix(:, :, :, startTime:endTime);
+            % meanTrialData = mean(trialData, 4);
 
-                % Get the trial start times.
-                temp = load(EVFilePath);
-                startTimes = round(str2double(temp.newT{:,1}));
-                maxScanTime = size(pscMatrix, 4);
-                for i = 1:length(startTimes)
-                    startTime = startTimes(i);
-%                     endTime = startTime + trialLength;
-                    if startTime + peakActivationTime > maxScanTime
-                        break
-                    end
-                    % Get the average of the activation along the trial
-                    % trialData = pscMatrix(:, :, :, startTime:endTime);
-                    % meanTrialData = mean(trialData, 4);
-
-                    % Sample the trial's data where we found it's most likely to peak
-                    trialPeakData = pscMatrix(:, :, :, startTime + peakActivationTime);
-                    condition = sprintf("%s_%s", ear, hand);
-                    switch condition
-                      case 'LE_LH'
-                        data_LE_LH = cat(4, data_LE_LH, trialPeakData);
-                        labels_LE_LH(i) = 0;
-                      case 'LE_RH'
-                        data_LE_RH = cat(4, data_LE_RH, trialPeakData);
-                        labels_LE_RH(i) = 1;
-                      case 'RE_LH'
-                        data_RE_LH = cat(4, data_RE_LH, trialPeakData);
-                        labels_RE_LH(i) = 0;
-                      case 'RE_RH'
-                        data_RE_RH = cat(4, data_RE_RH, trialPeakData);
-                        labels_RE_RH(i) = 1;
-                    end %switch
-                end % for startTimes
-            end % for file in EVFiles
+            % Sample the trial's data where we found it's most likely to peak
+            peakActivationTimes = startTimes + peakActivationTime;
+            % some scans are cut short - find the last actual trial we have
+            currMinTrials = max(find(peakActivationTimes < maxScanTime));
+            peakActivationTimes = peakActivationTimes(1:currMinTrials);
+            if currMinTrials < minTrials
+                minTrials = currMinTrials;
+            end
+            trialPeakData = pscMatrix(:, :, :, peakActivationTimes);
+            labels(find(T.hand == "L")) = 1; % label LH trials as "1"
+            labels = labels(1:currMinTrials);
+            switch ear
+              case "LE"
+                data_LE =  cat(4, data_LE, trialPeakData);
+                labels_LE = cat(2, labels_LE, labels);
+              case "RE"
+                data_RE =  cat(4, data_RE, trialPeakData);
+                labels_RE = cat(2, labels_RE, labels);
+            end %switch
         end % for run
 
-        %% There maybe an unequal number of trials in each group (due to disqualified trials)
-        %% Note: currently truncating from the end - better to randomize
-        RELabels = [labels_RE_LH; labels_RE_RH];
-        [t, minTrials_t] = find(RELabels == 0, 2);
-        if (~isempty(minTrials_t))
-            minTrials = min(minTrials_t);
-            data_RE_LH = data_RE_LH(:,:,:,1:minTrials);
-            data_RE_RH = data_RE_RH(:,:,:,1:minTrials);
-        end
+        % if (minTrials < maxTrials)
+        %     data_RE = data_RE(:,:,:,1:minTrials);
+        %     labels_RE = labels_RE(:,:,:,1:minTrials);
+        %     data_LE = data_LE(:,:,:,1:minTrials);
+        %     labels_LE = labels_LE(:,:,:,1:minTrials);
+        % end
 
-        LELabels = [labels_LE_LH; labels_LE_RH];
-        [t, minTrials_t] = find(LELabels == 0, 2);
-        if (~isempty(minTrials_t))
-            minTrials = min(minTrials_t);
-            data_LE_LH = data_LE_LH(:,:,:,1:minTrials);
-            data_LE_RH = data_LE_RH(:,:,:,1:minTrials);
-        end
-
-        data_all_LE = cat(4, data_LE_LH, data_LE_RH);
-        data_all_RE = cat(4, data_RE_LH, data_RE_RH);
-        labels_all_LE = reshape(squeeze(cat(4, labels_LE_LH, labels_LE_RH)),1, []);
-        labels_all_RE = reshape(squeeze(cat(4, labels_RE_LH, labels_RE_RH)),1, []);
-
-        size(labels_all_LE)
-        size(labels_all_RE)
+        size(labels_LE)
+        size(data_LE)
 
         % Write to file
-        % save(fullfile(outDir,['pc_native' fname]),'pc_funcData','funcInfo','-v7.3')
-        if ~exist(pscFileName, "file")
-            niftiwrite(pscMatrix,fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%s_%s", subId, ear, hand)), metadata, 'Compressed',true)
-        end
-
-        save(fullfile(params.multiTOutDir, ...
-                      sprintf("%d_individual_conditions_data_and_labels", subId)), ...
-             'labels_LE_LH', ...
-             'labels_LE_RH', ...
-             'labels_RE_LH', ...
-             'labels_RE_RH', ...
-             'data_LE_LH', ...
-             'data_LE_RH', ...
-             'data_RE_LH', ...
-             'data_RE_RH', ...
-             'params', ...
-             '-v7.3');
-
         save(fullfile(params.multiTOutDir,  sprintf("%d_multiT_data_and_labels", subId)), ...
-             "data_all_LE", ...
-             "data_all_RE", ...
-             "labels_all_LE", ...
-             "labels_all_RE", ...
+             "data_LE", ...
+             "data_RE", ...
+             "labels_LE", ...
+             "labels_RE", ...
+             'params', ...
              '-v7.3');
     end % for subId
 end
@@ -207,12 +156,12 @@ end
 
 % extract the files we need as input to the multi-t algorithm
 function extractMultiTData(params)
-for subId = params.subjects(1)
-    D = load(fullfile(params.multiTOutDir, ...
-                      sprintf("%d_multiT_data_and_labels", subId)));
-    for cond = ["data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"]
-        t = D.(cond)
-        save(fullfile(params.multiTOutDir,  sprintf("%d_%s", subId, cond)), cond, '-v7.3');
+    for subId = params.subjects(1)
+        D = load(fullfile(params.multiTOutDir, ...
+                          sprintf("%d_multiT_data_and_labels", subId)));
+        for cond = ["data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"]
+            t = D.(cond)
+            save(fullfile(params.multiTOutDir,  sprintf("%d_%s", subId, cond)), cond, '-v7.3');
+        end
     end
-end
 end

@@ -3,8 +3,8 @@ function params=setAnalysisParams()
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
-    params.subjects=[101:116];
-    % params.subjects=[115];
+    params.subjects=[102:116];
+    % params.subjects=[101];
     params.discardedSubjects=[102, 104, 105, 107, 113];
     params.subjects = setdiff(params.subjects, params.discardedSubjects);
 
@@ -40,11 +40,14 @@ function params=setAnalysisParams()
     EVDir         = fullfile(subjectDir,'EVs');
     functionalDir = fullfile(subjectDir,'functional');
 
+    rawBehavioralSubjectDir    = fullfile(params.rawBehavioral,"%d");
+
     params.sessionDir    =  strrep(sessionDir, "\", "\\");
     params.EVDir         =  strrep(EVDir, "\", "\\");
     params.anatomyDir    =  strrep(anatomyDir, "\", "\\");
     params.subjectDir    =  strrep(subjectDir, "\", "\\");
     params.functionalDir =  strrep(functionalDir, "\", "\\");
+    params.rawBehavioralSubjectDir =  strrep(rawBehavioralSubjectDir, "\", "\\");
 
     for sub = 1:length(params.subjects)
         if false
@@ -78,6 +81,8 @@ function params=setAnalysisParams()
     params.leftRoiMask.path= '/media/user/Data/fmri-data/analysis-output/auditory-ROI-mask/L_auditory_cortex_mask.nii.gz'
     params.rightRoiMask.path= '/media/user/Data/fmri-data/analysis-output/auditory-ROI-mask/R_auditory_cortex_mask.nii.gz'
 
+    %% multi T params
+    params.numShuffels = 10;
     %save variables
     params.saveName='_tr10.mat';
     params.outDir=fullfile(params.mainDir,params.expName,'SVM-data');
