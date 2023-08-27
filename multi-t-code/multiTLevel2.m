@@ -22,7 +22,7 @@ for cond = P.conditions
     mat=dir(fullfile(results_dir_2lvl, sprintf('*10000*2013_%s.mat', cond)));
     t = load(fullfile(results_dir_2lvl,mat.name));
     Pval = calcPvalVoxelWise_semotor(t.avgAnsMat, cond, outFolder, P);
-    fprintf("finished 2nd level analysis on condition: %s", cond);
+    fprintf("finished 2nd level analysis on condition: %s\n", cond);
 end
 
 end
