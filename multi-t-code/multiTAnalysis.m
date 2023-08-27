@@ -4,9 +4,9 @@ function multiTAnalysis()
     addpath('../niiTool')
     addpath("./multiT-code-from-paper")
     addpath("./multiT-code-from-paper/helper_functions")
-    P.numShuffels = 50;
-    % P.subjects=[101:116];
-    P.subjects=[101];
+    P.numShuffels = 100;
+    P.subjects=[104:116];
+    % P.subjects=[101];
     P.discardedSubjects=[102, 104, 105, 107, 113];
     P.subjects = setdiff(P.subjects, P.discardedSubjects);
     P.conditions=["LE", "RE"];
@@ -21,7 +21,7 @@ function multiTAnalysis()
 
 
     %% call level one analysis
-    % multiTLevel1(P);
+    multiTLevel1(P);
 
     %% call level two analysis
     multiTLevel2(P);

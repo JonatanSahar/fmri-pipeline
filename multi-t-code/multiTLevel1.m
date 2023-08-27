@@ -7,7 +7,8 @@ if numel(p) ==0
     pool   = parpool('local');
 end
 tic
-parfor subId = P.subjects
+for s = 1:length(P.subjects)
+    subId = P.subjects(s)
     for cond = P.conditions
         tMapName=sprintf("%d_%s_%d_shuffels", subId, cond, P.numShuffels);
         singleSubjectMultiT(subId, cond, tMapName, P);
