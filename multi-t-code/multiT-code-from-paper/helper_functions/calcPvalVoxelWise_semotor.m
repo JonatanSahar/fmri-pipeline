@@ -1,8 +1,5 @@
-function Pval = calcPvalVoxelWise_semotor(ansMat,condition,outFolder,lixFile,TRafterEV,type)
-addpath('../../niiTool');
+function Pval = calcPvalVoxelWise_semotor(ansMat,condition,outFolder, P)
 %calculate p-vals for 2nd lvl
-load(fullfile(lixFile),'lidx','niifile')
-% load(fullfile('../multit/results_pc_TR4_notremRT_med_stand_mask_10.5.20/4mapping20200522T121707withShuffling_400.mat'),'lidx','niifile'); %just for the spatial features of the map
 numShuff = size(ansMat,2) -1 ; % first map is real
 if size(ansMat,2)<1500%%%%%%%%%%%%%%%%
     % calc p value voxel wise
@@ -25,13 +22,13 @@ end
 % sigP=zeros(size(Pval));
 % sigP(Pval<0.05)=Pval(Pval<0.05);
 zeroimag = zeros([91,109,91]);% background
-zeroimag(lidx) = Pval;
-niifile.img = zeroimag;
+zeroimag(P.linearIndex) = Pval;
+niifile = single(zeroimag);
 
- PmapName=[condition '_Pmap_pc_TR1_peakTR' num2str(TRafterEV) '_' type];
+PmapName= sprintf('%s_pMmap', condition);
 %  outFolder=fullfile(pwd,'pilot_data','MultiGroupRes_pc_1.4.20');
  mkdir(outFolder); 
 outfile=fullfile(outFolder,PmapName);
-save_untouch_nii(niifile,outfile);
+niftiwrite(niifile, outfile, 'Compressed',true);
 
 end

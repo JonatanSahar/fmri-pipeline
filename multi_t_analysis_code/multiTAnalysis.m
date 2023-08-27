@@ -12,7 +12,7 @@ function multiTAnalysis()
     P.multiResDirName=fullfile("../multi-t-results");
     P.TmapName=sprintf("%d_%s_%d_shuffels", subject, condition, numShuffels);
     P.dataDir=fullfile("../multi-t-data");
-    P.multiDataLoc=p.dataDir;
+    P.multiDataLoc=P.dataDir;
     P.multiout_dir=P.multiResDirName;
     P.multiTMNIMask = fullfile(P.dataDir,"standard_MNI_mask.nii.gz");
     P.MNIMaskIndex = fullfile(P.dataDir,"standard_MNI_mask_index.mat");

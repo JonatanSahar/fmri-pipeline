@@ -1,8 +1,8 @@
-function MAIN_compute_non_directional_second_level(condName,results_dir_1lvl,results_dir_2lvl, numShuffels)
+function MAIN_compute_non_directional_second_level(condName,results_dir_1lvl,results_dir_2lvl, P)
 % This function computes second levele results 
 
 
-ffldrs = findFilesBVQX(results_dir_1lvl,['*' condName '*' numShuffels '*' 'shuffels.mat']);
+    ffldrs = findFilesBVQX(convertStringsToChars(results_dir_1lvl),convertStringsToChars(sprintf("*%s*%d*shuffels.mat", condName, P.numShuffels)));
 % fprintf('The following results folders were found:\n'); 
 % for i = 1:length(ffldrs)
 %     [pn,fn] = fileparts(ffldrs{i})
@@ -15,5 +15,5 @@ mkdir(results_dir_2lvl);
 
 fold = 1; 
 numMaps = 10000;
- computeFFXresults(ffldrs,fold,results_dir_2lvl,numMaps,condName)
+ computeFFXresults(ffldrs,fold,results_dir_2lvl,numMaps,condName, P)
 end

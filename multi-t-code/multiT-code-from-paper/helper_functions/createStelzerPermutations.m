@@ -11,7 +11,7 @@ else
 %         nummapscreate,size(ansMat,2));
 end
 if length(find(isnan(ansMat)==1))
-    warning('You have NaNs in your avg ans mat data'); 
+    warning('You have %d NaNs out of %d elements in your avg ans mat data. Converting them to zeros', length(find(isnan(ansMat)==1)), numel(ansMat));
     ansMat(isnan(ansMat)) = 0; 
 end
 % check that you have shuffels and report what you will do 

@@ -5,7 +5,7 @@ function singleSubjectMultiT(subject,condition, P)
     addpath("./helper_functions");
     % dataDir=P.dataDir;
     % TODO: ask Shahar
-    dfile=dir(fullfile(P.multiResDirName,sprintf("%d_%s_%d_shuffels.mat", subject, condition, numShuffels)));
+    dfile=dir(fullfile(P.multiResDirName,sprintf("%d_%s_%d_shuffels.mat", subject, condition, P.numShuffels)));
     if isempty(dfile)
         %% load mask
         % TODO: ask Shahar - is the PSC matrix not already clipped to the MNI brain? It went through applywarp
