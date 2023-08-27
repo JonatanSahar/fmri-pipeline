@@ -1,4 +1,4 @@
-function singleSubjectMultiT(subject,condition, P)
+function singleSubjectMultiT(subject,condition, tMapName, P)
     % percent signal change output variables: "data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"
     % saved in "subId_multiT_data_and_labels.mat"
     % ⇒ condition must be one of "LE", "RE"
@@ -22,25 +22,6 @@ function singleSubjectMultiT(subject,condition, P)
         if ~exist(P.multiResDirName)
             mkdir(P.multiResDirName)
         end
-        %% load pe data for one subject
-        % %If analyzing pe
-        %
-        % % data_loc=fullfile(dataDir,num2str(subject),'/derive/PEs/zscore_PEs/all_z_PEs');
-        % data_loc=fullfile(dataDir,num2str(subject),'/derive/PEs/multi_MNI_PEs/all_PEs_MNI');
-        % l=load(fullfile(data_loc, [condition '_labels.mat']));
-        % labels=l.(char(fieldnames(l)));
-        % condList=load(fullfile(data_loc, [condition '_list.mat']));
-        % peList=condList.(char(fieldnames(condList)));
-        %
-        % pefnms = findFilesBVQX(data_loc,peList);
-        % data   = zeros(size(pefnms,1),size(locations,1)); % initizlie data
-        % % load mask data from 3d:
-        % for p = 1:length(pefnms)
-        %     niifile = load_untouch_nii(pefnms{p});
-        %     pedata = niifile.img;
-        %     peflat  = pedata(linearIndex); % this is one row in our data matrix
-        %     data(p,:)  =  peflat;
-        % end
 
         %% load PC data for one subject
         %If analyzing pc
@@ -132,7 +113,7 @@ function singleSubjectMultiT(subject,condition, P)
             mkdir(P.multiout_dir);
         end
 
-        outfile=fullfile(P.multiout_dir,P.TmapName)
+        outfile=fullfile(P.multiout_dir,tMapName)
         % save_untouch_nii(niifile,outfile);
         niftiwrite(single(tMapImage), outfile, niiheader, 'Compressed',true)
         fprintf("finished subject no. %d, condition: %s", subject, condition);
