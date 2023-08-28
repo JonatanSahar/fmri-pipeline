@@ -7,7 +7,7 @@ if numel(p) ==0
     pool   = parpool('local');
 end
 tic
-for s = 1:length(P.subjects)
+parfor s = 1:length(P.subjects)
     subId = P.subjects(s)
     for cond = P.conditions
         tMapName=sprintf("%d_%s_%d_shuffels", subId, cond, P.numShuffels);

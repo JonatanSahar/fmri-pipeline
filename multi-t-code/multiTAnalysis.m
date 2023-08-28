@@ -5,7 +5,7 @@ function multiTAnalysis()
     addpath("./multiT-code-from-paper")
     addpath("./multiT-code-from-paper/helper_functions")
     P.numShuffels = 100;
-    P.subjects=[104:116];
+    P.subjects=[101:116];
     % P.subjects=[101];
     P.discardedSubjects=[102, 104, 105, 107, 113];
     P.subjects = setdiff(P.subjects, P.discardedSubjects);
