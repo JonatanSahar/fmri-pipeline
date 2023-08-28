@@ -75,7 +75,9 @@ function createMultiTData()
             pscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
             if ~exist(pscFileName, "file")
                 functionalDataPath = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
+                fprintf("reading from %d, run %d", subId, runNumber)
                 functionalData = niftiread(functionalDataPath);
+                fprintf("done reading from %d, run %d", subId, runNumber)
                 metadata = niftiinfo(functionalDataPath);
                 pscMatrix = calcPercentSignalChange(functionalData);
                 niftiwrite(pscMatrix, pscFileName, metadata, 'Compressed',true);
