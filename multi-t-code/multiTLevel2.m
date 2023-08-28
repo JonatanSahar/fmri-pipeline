@@ -4,7 +4,7 @@ results_dir_1lvl = P.multiResDirName;
 outFolder=P.multiResDirName;
 results_dir_2lvl = P.multiResDirName;
 
-% Compute avgAnsMat across subjects, per condition
+% Compute avgAnsMat across subjects, per condition - including all the permutations on the shuffels
 for cond = P.conditions
     MAIN_compute_non_directional_second_level(cond, results_dir_1lvl, results_dir_2lvl, P)
 end

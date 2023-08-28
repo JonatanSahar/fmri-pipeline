@@ -1,5 +1,4 @@
-function create_Pval_mask(mapDir,tresh,TRafterEV)
-addpath('../../niiTool')
+function create_Pval_mask(mapDir,tresh)
 addpath(genpath('../multit'));
 
 maps=dir(fullfile(mapDir,['*' '_Pmap_pc_TR1_peakTR' num2str(TRafterEV) '_mcRej_nov20.nii']));

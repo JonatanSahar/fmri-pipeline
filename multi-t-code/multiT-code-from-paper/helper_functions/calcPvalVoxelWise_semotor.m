@@ -1,6 +1,8 @@
 function Pval = calcPvalVoxelWise_semotor(ansMat,condition,outFolder, P)
 %calculate p-vals for 2nd lvl
 numShuff = size(ansMat,2) -1 ; % first map is real
+maskData = niftiread(P.multiTMNIMask);
+maskInfo = niftiinfo(P.multiTMNIMask);
 if size(ansMat,2)<1500%%%%%%%%%%%%%%%%
     % calc p value voxel wise
     % this is effectively two tailed inference
@@ -21,14 +23,14 @@ end
 
 % sigP=zeros(size(Pval));
 % sigP(Pval<0.05)=Pval(Pval<0.05);
-zeroimag = zeros([91,109,91]);% background
+zeroimag = zeros(size(maskData));
+% zeroimag = zeros([91,109,91]);% background
 zeroimag(P.linearIndex) = Pval;
 niifile = single(zeroimag);
 
 PmapName= sprintf('%s_pMmap', condition);
-%  outFolder=fullfile(pwd,'pilot_data','MultiGroupRes_pc_1.4.20');
- mkdir(outFolder); 
+mkdir(outFolder);
 outfile=fullfile(outFolder,PmapName);
-niftiwrite(niifile, outfile, 'Compressed',true);
+niftiwrite(niifile, outfile, maskInfo, 'Compressed',true);
 
 end
