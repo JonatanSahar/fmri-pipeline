@@ -1,8 +1,8 @@
 function Pval = calcPvalVoxelWise_semotor(ansMat,condition,outFolder, P)
 %calculate p-vals for 2nd lvl
 numShuff = size(ansMat,2) -1 ; % first map is real
-maskData = niftiread(P.multiTMNIMask);
-maskInfo = niftiinfo(P.multiTMNIMask);
+maskData = niftiread(P.MNIMask);
+maskInfo = niftiinfo(P.MNIMask);
 if size(ansMat,2)<1500%%%%%%%%%%%%%%%%
     % calc p value voxel wise
     % this is effectively two tailed inference

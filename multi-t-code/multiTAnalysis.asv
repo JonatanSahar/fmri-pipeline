@@ -12,12 +12,12 @@ function multiTAnalysis()
     P.conditions=["LE", "RE"];
 
     P.regionSize      = 27; % sl size
-    P.multiResDirName=fullfile("../multi-t-results");
+    P.resultsDir=fullfile("../multi-t-results");
     P.dataDir=fullfile(pwd,"../multi-t-data");
-    P.multiTMNIMask = fullfile(P.dataDir,"standard_MNI_mask.nii.gz");
+    P.MNIMask = fullfile(P.dataDir,"standard_MNI_mask.nii.gz");
     P.MNIMaskIndex = fullfile(P.dataDir,"standard_MNI_mask_index.mat");
     P.multiDataLoc=P.dataDir;
-    P.multiout_dir=P.multiResDirName;
+    P.multiout_dir=P.resultsDir;
 
 
     %% call level one analysis
@@ -30,14 +30,14 @@ function multiTAnalysis()
 
     %% FDR correction
     for  cond = P.conditions
-        cmd= sprintf("fdr -i %s -m %s -q 0.05", fullfile(P.multiResDirName, sprintf('%d_pMap.nii.gz', cond)),  fullfile(params.dataDir,"standard_MNI_mask.nii.gz"));
+        cmd= sprintf("fdr -i %s -m %s -q 0.05", fullfile(P.resultsDir, sprintf('%d_pMap.nii.gz', cond)),  fullfile(params.dataDir,"standard_MNI_mask.nii.gz"));
         cmd
         system(cmd);
     end
 
     %% create Pmasks
     thresh=0.0001;
-    create_Pval_mask(P.multiResDirName, thresh,TRafterEV)
+    create_Pval_mask(P.resultsDir, thresh,TRafterEV)
     % create_Pval_mask_forBrainView(mapDir,thresh,TRafterEV)
 
     %% overlap or subtract masks (conditions)
@@ -48,7 +48,7 @@ function multiTAnalysis()
     map_mult_or_subt(outFolder,map1,map2,1)
 
     %%% visualize maps
-    dataDir=P.multiResDirName;
+    dataDir=P.resultsDir;
     maskfn = fullfile(dataDir,'hand_Pmap_pc_TR1_peakTR5_mcRej_nov20_Pmask_trsh0001.nii');
 
     V = niftiread(maskfn);

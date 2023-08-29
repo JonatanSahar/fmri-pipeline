@@ -1,8 +1,8 @@
 function multiTLevel2(PP)
 P = PP;
-results_dir_1lvl = P.multiResDirName;
-outFolder=P.multiResDirName;
-results_dir_2lvl = P.multiResDirName;
+results_dir_1lvl = P.resultsDir;
+outFolder=P.resultsDir;
+results_dir_2lvl = P.resultsDir;
 
 % Compute avgAnsMat across subjects, per condition - including all the permutations on the shuffels
 for cond = P.conditions

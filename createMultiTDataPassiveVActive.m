@@ -1,4 +1,4 @@
-function createMultiTData()
+function createMultiTDataPassiveVActiv()
     params = setAnalysisParams()
     if ~exist(params.multiTOutDir)
         mkdir(params.multiTOutDir)

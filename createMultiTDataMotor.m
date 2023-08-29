@@ -1,7 +1,7 @@
-function createMultiTData()
+function createMultiTDataMotor()
     params = setAnalysisParams()
-    if ~exist(params.multiTOutDir)
-        mkdir(params.multiTOutDir)
+    if ~exist(params.multiTOutDirMotor)
+        mkdir(params.multiTOutDirMotor)
     end
     rng(params.seed);
 
@@ -29,41 +29,40 @@ function createMultiTData()
     %% load data for each condition
     % base_str = "%d_EV_audiomotor_%d_%sE_%sH.txt";
     % base_str = "%d_EV_audiomotor_*_%s_%s.mat";
-    base_str = "%d_EV_audiomotor_%d*H.mat"; %101_audiomotor_1_log.mat
-    log_str = "%d_audiomotor_%d.mat";
-    ears = ["LE", "RE"];
+    base_str = "%d_EV_audiomotor_%d*H.mat";
+    log_str = "%d_audiomotor_%d.mat"; %101_audiomotor_1_log.mat
+    hands = ["LH", "RH"];
     % only compute this for experimental runs
     for S = 1:length(params.subjects)
         subId = params.subjects(S)
         % Initialization - here because of parallel computing
-        data_LE = [];
-        data_RE = [];
+        data_LH = [];
+        data_RH = [];
         pscMatrix = [];
         metadata = [];
-        labels_RE = [];
-        labels_LE = [];
-        for runNumber = [1:4]
+        labels_RH = [];
+        labels_LH = [];
+        for runNumber = [1:2]
             labels = zeros(1,maxTrials);
-            % for ear = ears
+            % for ear = hands
             functionalDir = sprintf(params.functionalDir, subId);
-            % for runNumber = 1:numRuns
-            EVDir = sprintf(params.rawBehavioralSubjectDir, subId);
+            % take the log file from the *raw* behavioral data dir. It hasn't been copied into analysis-output
+            rawEVDir = sprintf(params.rawBehavioralSubjectDir, subId);
             logFilename = sprintf(log_str, ...
                                   subId,...
                                   runNumber);
-            t = load(fullfile(EVDir,logFilename));
+            t = load(fullfile(rawEVDir,logFilename));
             % filter out disqualified trials
             T =  t.eventTable;
             validIdx = T.had_error == 0;
             T = array2table(T{validIdx, :},'VariableNames', T.Properties.VariableNames);
-            ear = sprintf("%sE",T.ear(1));
+            hand = sprintf("%sH",T.hand(1));
             minTrials = maxTrials;
             % transform the scan to MNI space
             featDir = fullfile(functionalDir, ...
-                               sprintf("sub%d_audiomotor_%d_%s.feat", ...
+                               sprintf("sub%d_motorLoc_%d.feat", ...
                                        subId, ...
-                                       runNumber, ...
-                                       ear));
+                                       runNumber));
             if ~exist(fullfile(featDir,'filtered_func_data_MNI.nii.gz'),'file') || params.override
                 tranformFeatDirToMNI(featDir)
             else
@@ -71,7 +70,7 @@ function createMultiTData()
             end
 
             % calculate percent-signal-change
-            pscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
+            pscFileName = fullfile(params.multiTOutDirMotor, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
             if ~exist(pscFileName, "file")
                 functionalDataPath = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
                 fprintf("reading from %d, run %d", subId, runNumber)
@@ -102,32 +101,32 @@ function createMultiTData()
             trialPeakData = pscMatrix(:, :, :, peakActivationTimes);
             labels(find(T.hand == "L")) = 1; % label LH trials as "1"
             labels = labels(1:currMinTrials);
-            switch ear
-              case "LE"
-                data_LE =  cat(4, data_LE, trialPeakData);
-                labels_LE = cat(2, labels_LE, labels);
-              case "RE"
-                data_RE =  cat(4, data_RE, trialPeakData);
-                labels_RE = cat(2, labels_RE, labels);
+            switch hand
+              case "LH"
+                data_LH =  cat(4, data_LH, trialPeakData);
+                labels_LH = cat(2, labels_LH, labels);
+              case "RH"
+                data_RH =  cat(4, data_RH, trialPeakData);
+                labels_RH = cat(2, labels_RH, labels);
             end %switch
         end % for run
 
         % if (minTrials < maxTrials)
-        %     data_RE = data_RE(:,:,:,1:minTrials);
-        %     labels_RE = labels_RE(:,:,:,1:minTrials);
-        %     data_LE = data_LE(:,:,:,1:minTrials);
-        %     labels_LE = labels_LE(:,:,:,1:minTrials);
+        %     data_RH = data_RH(:,:,:,1:minTrials);
+        %     labels_RH = labels_RH(:,:,:,1:minTrials);
+        %     data_LH = data_LH(:,:,:,1:minTrials);
+        %     labels_LH = labels_LH(:,:,:,1:minTrials);
         % end
 
-        size(labels_LE)
-        size(data_LE)
+        size(labels_LH)
+        size(data_LH)
 
         % Write to file
-        save(fullfile(params.multiTOutDir,  sprintf("%d_multiT_data_and_labels", subId)), ...
-             "data_LE", ...
-             "data_RE", ...
-             "labels_LE", ...
-             "labels_RE", ...
+        save(fullfile(params.multiTOutDirMotor,  sprintf("%d_multiT_data_and_labels", subId)), ...
+             "data_LH", ...
+             "data_RH", ...
+             "labels_LH", ...
+             "labels_RH", ...
              'params', ...
              '-v7.3');
     end % for subId
@@ -158,11 +157,11 @@ end
 % extract the files we need as input to the multi-t algorithm
 function extractMultiTData(params)
     for subId = params.subjects(1)
-        D = load(fullfile(params.multiTOutDir, ...
+        D = load(fullfile(params.multiTOutDirMotor, ...
                           sprintf("%d_multiT_data_and_labels", subId)));
-        for cond = ["data_all_LE", "data_all_RE", "labels_all_LE", "labels_all_RE"]
+        for cond = ["data_all_LH", "data_all_RH", "labels_all_LH", "labels_all_RH"]
             t = D.(cond)
-            save(fullfile(params.multiTOutDir,  sprintf("%d_%s", subId, cond)), cond, '-v7.3');
+            save(fullfile(params.multiTOutDirMotor,  sprintf("%d_%s", subId, cond)), cond, '-v7.3');
         end
     end
 end

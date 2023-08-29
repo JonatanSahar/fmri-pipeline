@@ -1,7 +1,7 @@
 function testMultiTanalysis_semotor_pc(subject,condition,numShuffels,TRafterEV)
 params.regionSize      = 27; % sl size
 params.numShuffels     =numShuffels;
-params.multiResDirName=fullfile('../multit',['results_pc_TR' num2str(TRafterEV) '_noEV']);
+params.resultsDir=fullfile('../multit',['results_pc_TR' num2str(TRafterEV) '_noEV']);
 params.TmapName=['pc_TR' num2str(TRafterEV) '_noEV'];
 params.dataDir=fullfile(pwd,'/pilot_data');
 params.multiDataLoc=fullfile(params.dataDir,num2str(subject),'/derive/pc_data/forMultiT',['pc_TR' num2str(TRafterEV) '_noEV']);
@@ -15,10 +15,10 @@ maskfn = fullfile(params.dataDir,'group_standard_mask.nii.gz');
 niifile = load_untouch_nii(maskfn);
 niidata =  niifile.img;
 [lidx, locations ] = getLocationsFromMaskNii(niidata);
-% resultsDirName=params.multiResDirName;
+% resultsDirName=params.resultsDir;
 
-if ~exist(params.multiResDirName)
-    mkdir(params.multiResDirName)
+if ~exist(params.resultsDir)
+    mkdir(params.resultsDir)
 end
 %% load pe data for one subject
 % %If analyzing pe
@@ -115,7 +115,7 @@ for i = 1:(params.numShuffels + 1) % loop on shuffels
 end
 timing=toc(start);
 fnOut = [num2str(subject),condition, datestr(clock,30) 'withShuffling_' num2str(params.numShuffels) '.mat'];
-save(fullfile(params.multiResDirName,fnOut));
+save(fullfile(params.resultsDir,fnOut));
 % msgtitle = sprintf('Finished sub %.3d ',subnum);
 
 %%

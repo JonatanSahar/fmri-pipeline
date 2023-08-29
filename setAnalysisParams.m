@@ -86,7 +86,8 @@ function params=setAnalysisParams()
     %save variables
     params.saveName='_tr10.mat';
     params.outDir=fullfile(params.mainDir,params.expName,'SVM-data');
-    params.multiTOutDir=fullfile(params.mainDir,params.expName,'multi-t-data');
+    params.multiTOutDir=fullfile(params.mainDir,params.expName,'multi-t-data', 'audiomotor');
+    params.multiTOutDirMotor=fullfile(params.mainDir,params.expName,'multi-t-data', "motor-only");
     params.savenii=0; %% true for multi-t analysis data
     params.useMasking=1;
 end
