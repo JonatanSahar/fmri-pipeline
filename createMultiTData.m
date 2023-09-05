@@ -6,7 +6,8 @@ function createMultiTData()
     rng(params.seed);
 
     %% load mask
-    % Load a mask delineating an ROI, if relevant - can be used to zero-out all non-ROI voxels, for a faster analysis with fewer comparisons we'll need to correct for.
+    % Load a mask delineating an ROI, if relevant - can be used to zero-out all non-ROI voxels, for a faster analysis with fewer
+    % comparisons we'll need to correct for.
 
     % maskImg.data=niftiread(params.rightRoiMask);
     % maskImg.info=niftiinfo(params.rightRoiMask);
