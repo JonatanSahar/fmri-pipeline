@@ -1,4 +1,8 @@
 function createMultiTDataMotor()
+% This function transforms each subject's first level COPE data into percent-signa-change format in MNI152 space (without clipping it to the MNI152 mask).
+% It then extract a certain timepoint from each trial, estimated to represent peak BOLD activation, and labels that timepoint based on the hand used in that trial - LH or RH
+% It output is a .mat file per subject containing all of the data points and an associated labels vector
+
     params = setAnalysisParams()
     if ~exist(params.multiTOutDirMotor)
         mkdir(params.multiTOutDirMotor)
@@ -27,8 +31,6 @@ function createMultiTDataMotor()
 
 
     %% load data for each condition
-    % base_str = "%d_EV_audiomotor_%d_%sE_%sH.txt";
-    % base_str = "%d_EV_audiomotor_*_%s_%s.mat";
     base_str = "%d_EV_audiomotor_%d*H.mat";
     log_str = "%d_audiomotor_%d.mat"; %101_audiomotor_1_log.mat
     hands = ["LH", "RH"];
@@ -44,9 +46,8 @@ function createMultiTDataMotor()
         labels_LH = [];
         for runNumber = [1:2]
             labels = zeros(1,maxTrials);
-            % for ear = hands
             functionalDir = sprintf(params.functionalDir, subId);
-            % take the log file from the *raw* behavioral data dir. It hasn't been copied into analysis-output
+            % take the log file from the *raw* behavioral data dir. It hasn't been copied into  analysis-output
             rawEVDir = sprintf(params.rawBehavioralSubjectDir, subId);
             logFilename = sprintf(log_str, ...
                                   subId,...
@@ -73,9 +74,9 @@ function createMultiTDataMotor()
             pscFileName = fullfile(params.multiTOutDirMotor, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
             if ~exist(pscFileName, "file")
                 functionalDataPath = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
-                fprintf("reading from %d, run %d", subId, runNumber)
+                fprintf("reading from %d, run %d\n", subId, runNumber)
                 functionalData = niftiread(functionalDataPath);
-                fprintf("done reading from %d, run %d", subId, runNumber)
+                fprintf("done reading from %d, run %d\n", subId, runNumber)
                 metadata = niftiinfo(functionalDataPath);
                 pscMatrix = calcPercentSignalChange(functionalData);
                 niftiwrite(pscMatrix, pscFileName, metadata, 'Compressed',true);
