@@ -1,5 +1,5 @@
 function createMultiTData()
-    params = setAnalysisParams()
+    params = setAnalysisParams();
     if ~exist(params.multiTOutDir)
         mkdir(params.multiTOutDir)
     end

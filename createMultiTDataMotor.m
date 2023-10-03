@@ -3,7 +3,7 @@ function createMultiTDataMotor()
 % It then extract a certain timepoint from each trial, estimated to represent peak BOLD activation, and labels that timepoint based on the hand used in that trial - LH or RH
 % It output is a .mat file per subject containing all of the data points and an associated labels vector
 
-    params = setAnalysisParams()
+    params = setAnalysisParams();
     if ~exist(params.multiTOutDirMotor)
         mkdir(params.multiTOutDirMotor)
     end
@@ -23,31 +23,26 @@ function createMultiTDataMotor()
     % These are the locations in 3D of all voxels belonging to the ROI
     % locations=[x,y,z];
 
-    %% Initialize matrices for each combination
-    % Trial parameters
+    %% Trial parameters
     trialLength = 16; % 16 seconds/TRs
     peakActivationTime = 8;
     maxTrials = 20;
 
 
     %% load data for each condition
-    base_str = "%d_EV_audiomotor_%d*H.mat";
-    log_str = "%d_audiomotor_%d.mat"; %101_audiomotor_1_log.mat
+    log_str = "%d_motorLoc_%d.mat"; %101_audiomotor_1_log.mat
     hands = ["LH", "RH"];
     % only compute this for experimental runs
     for S = 1:length(params.subjects)
         subId = params.subjects(S)
         % Initialization - here because of parallel computing
-        data_LH = [];
-        data_RH = [];
+        data = [];
+        labels = [];
         pscMatrix = [];
         metadata = [];
-        labels_RH = [];
-        labels_LH = [];
         for runNumber = [1:2]
-            labels = zeros(1,maxTrials);
             functionalDir = sprintf(params.functionalDir, subId);
-            % take the log file from the *raw* behavioral data dir. It hasn't been copied into  analysis-output
+            % take the event table file from the *raw* behavioral data dir. It hasn't been copied into  analysis-output
             rawEVDir = sprintf(params.rawBehavioralSubjectDir, subId);
             logFilename = sprintf(log_str, ...
                                   subId,...
@@ -57,7 +52,6 @@ function createMultiTDataMotor()
             T =  t.eventTable;
             validIdx = T.had_error == 0;
             T = array2table(T{validIdx, :},'VariableNames', T.Properties.VariableNames);
-            hand = sprintf("%sH",T.hand(1));
             minTrials = maxTrials;
             % transform the scan to MNI space
             featDir = fullfile(functionalDir, ...
@@ -100,34 +94,24 @@ function createMultiTDataMotor()
                 minTrials = currMinTrials;
             end
             trialPeakData = pscMatrix(:, :, :, peakActivationTimes);
-            labels(find(T.hand == "L")) = 1; % label LH trials as "1"
-            labels = labels(1:currMinTrials);
-            switch hand
-              case "LH"
-                data_LH =  cat(4, data_LH, trialPeakData);
-                labels_LH = cat(2, labels_LH, labels);
-              case "RH"
-                data_RH =  cat(4, data_RH, trialPeakData);
-                labels_RH = cat(2, labels_RH, labels);
-            end %switch
+            runLabels(T.hand == "L") = 1; % label LH trials as "1"\
+            runLabels(T.hand == "R") = 0;
+            runLabels = runLabels(1:currMinTrials);
+            data =  cat(4, data, trialPeakData);
+            labels = cat(2, labels, runLabels);
         end % for run
 
-        % if (minTrials < maxTrials)
-        %     data_RH = data_RH(:,:,:,1:minTrials);
-        %     labels_RH = labels_RH(:,:,:,1:minTrials);
-        %     data_LH = data_LH(:,:,:,1:minTrials);
-        %     labels_LH = labels_LH(:,:,:,1:minTrials);
-        % end
+        size(labels)
+        size(data)
 
-        size(labels_LH)
-        size(data_LH)
+        % suffix to variable names for interop with existing  multiT code
+        data_motor = data;
+        labels_motor = labels;
 
         % Write to file
         save(fullfile(params.multiTOutDirMotor,  sprintf("%d_multiT_data_and_labels", subId)), ...
-             "data_LH", ...
-             "data_RH", ...
-             "labels_LH", ...
-             "labels_RH", ...
+             "data_motor", ...
+             "labels_motor", ...
              'params', ...
              '-v7.3');
     end % for subId
@@ -160,9 +144,11 @@ function extractMultiTData(params)
     for subId = params.subjects(1)
         D = load(fullfile(params.multiTOutDirMotor, ...
                           sprintf("%d_multiT_data_and_labels", subId)));
-        for cond = ["data_all_LH", "data_all_RH", "labels_all_LH", "labels_all_RH"]
-            t = D.(cond)
-            save(fullfile(params.multiTOutDirMotor,  sprintf("%d_%s", subId, cond)), cond, '-v7.3');
+        for cond = ["data", "labels"]
+            data_motor = D.data;
+            labels_motor = D.labels;
+            save(fullfile(params.multiTOutDirMotor, ...
+                          sprintf("%d_multiT_data_and_labels", subId)), data_motor, labels_motor, '-v7.3');
         end
     end
 end
