@@ -31,7 +31,7 @@ function plotTimeCourse(ear, cortex)
     title(titleStr);
     xlabel('Time (sec)');
     ylabel('Activity (% signal change)');
-    legend({['LH'], ['RH']}, 'Location', 'best');
+    legend({['LH'], ['RH']}, 'Location', 'best'); % must be in this order - based on order of plotting above
     hold off;
 
     % Saving the figure to a jpg file
