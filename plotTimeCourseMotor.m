@@ -1,21 +1,19 @@
-function plotTimeCourse(ear, cortex)
+function plotTimeCourseMotor(cortex)
 %% Input:
-% ear = {"LE", "RE"}
+% ear = {"LH", "RH"}
 % cortex = {"LCortex", "RCortex"}
 
 %% For plotting all combinations:
-% for ear = ["LE", "RE"]
 % for cortex = ["LCortex", "RCortex"]
-% plotTimeCourse(ear, cortex)
+% plotTimeCourseMotor(cortex)
 % end
-% end
-
+%
 
     params = setAnalysisParams();;
-    data = load(fullfile(params.timeCourseOutDir, "time_course_mean.mat"));
+    data = load(fullfile(params.timeCourseOutDir, "time_course_motor_mean.mat"));
     % Create the variable names dynamically
-    varName_LH = strcat('average_', ear, '_', cortex, '_LH');
-    varName_RH = strcat('average_', ear, '_', cortex, '_RH');
+    varName_LH = strcat('average_LH', '_', cortex);
+    varName_RH = strcat('average_RH', '_', cortex);
 
     % Access the data from the structure dynamically
     LH_data = data.(varName_LH);
@@ -27,7 +25,7 @@ function plotTimeCourse(ear, cortex)
     plot(RH_data, 'LineWidth', 1.5);
 
     % Adding Title, Labels, and Legend
-    titleStr = sprintf("Average Activity Over Time: %s, %s", ear, cortex);
+    titleStr = sprintf("(Motor-only) Average Activity Over Time: %s", cortex);
     title(titleStr);
     xlabel('Time (sec)');
     ylabel('Activity (% signal change)');
@@ -36,7 +34,7 @@ function plotTimeCourse(ear, cortex)
 
     % Saving the figure to a jpg file
 
-    titleStr = sprintf("Average Activity Over Time %s %s", ear, cortex);
+    titleStr = sprintf("Average Motor Activity Over Time %s",cortex);
     fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
     fileName = fullfile(params.experimentDir,  "figures", fileName);
     saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format

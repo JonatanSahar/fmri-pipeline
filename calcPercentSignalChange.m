@@ -4,5 +4,7 @@ function percentChangeData = calcPercentSignalChange(functionalData)
         disp(['this scan has ', num2str(length(zeroLocs)),' zero voxels']);
         functionalData(zeroLocs)=0.00001;
     end
-    percentChangeData=functionalData./mean(functionalData,4)*100-100;
+    functionalData = double(functionalData);
+    meanFuncData = mean(functionalData,4);
+    percentChangeData = functionalData./meanFuncData*100 - 100;
 end

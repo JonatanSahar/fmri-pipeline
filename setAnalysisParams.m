@@ -13,7 +13,7 @@ function params=setAnalysisParams();
     % d = dir('./data');
     d = dir(params.baseDirPath);
 
-    params.mainDir = d(1)
+    params.mainDir = d(1);
     params.mainDir = params.mainDir.folder;
 
 
@@ -24,7 +24,7 @@ function params=setAnalysisParams();
     params.rawDCM=fullfile(params.mainDir,'raw-data');
     params.fsfdir=fullfile(params.mainDir,'fsf-files');
     params.rawBehavioral=fullfile(params.rawDCM, 'behavioral');
-    params.templateDir='/home/user/fsl/data/standard/MNI152_T1_2mm_brain'
+    params.templateDir='/home/user/fsl/data/standard/MNI152_T1_2mm_brain';
 
 
     params.conditions = ["motorLoc", "auditoryLoc", "audiomotor"];
@@ -34,7 +34,7 @@ function params=setAnalysisParams();
     % params.conditions = ["auditoryLoc"];
     % params.numRunsPerCondition = [1];
 
-    subjectDir    = fullfile(params.experimentDir,"%d")
+    subjectDir    = fullfile(params.experimentDir,"%d");
     sessionDir    = fullfile(subjectDir,'session_1');
     anatomyDir    = fullfile(subjectDir,'anatomy');
     EVDir         = fullfile(subjectDir,'EVs');
@@ -77,9 +77,14 @@ function params=setAnalysisParams();
     %mask variables
     params.mask.name='MNI152_T1_2mm_brain_mask.nii.gz';
     params.mask.dir=fullfile(params.mainDir,params.expName);
-    params.mask.path= "/media/user/Data/fmri-data/analysis-output/MNI-brain-mask/standard_mask.nii.gz"
-    params.leftRoiMask.path= "/media/user/Data/fmri-data/analysis-output/L_auditory_cortex_mask.nii.gz"
-    params.rightRoiMask.path= "/media/user/Data/fmri-data/analysis-output/R_auditory_cortex_mask.nii.gz"
+    params.mask.path= "/media/user/Data/fmri-data/analysis-output/MNI-brain-mask/standard_mask.nii.gz";
+    params.leftRoiMask.path= "/media/user/Data/fmri-data/analysis-output/L_auditory_cortex_mask.nii.gz";
+    params.rightRoiMask.path= "/media/user/Data/fmri-data/analysis-output/R_auditory_cortex_mask.nii.gz";
+    params.bilateralAuditoryCortexMask.path = "/media/user/Data/fmri-data/analysis-output/combined_auditory_cortex_mask.nii.gz";
+    params.significantVoxelsMask.LE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/LE_pMap_uthr_masked.nii.gz";
+    params.significantVoxelsMask.RE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/RE_pMap_uthr_masked.nii.gz";
+    params.significantVoxelsMask.bilateral.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/merged_pMap_uthr_masked.nii.gz";
+    params.significantVoxelsMask.motor.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/motor-only/motor_pMap_uthr_masked.nii.gz";
 
     %% multi T params
     params.numShuffels = 10;
@@ -88,7 +93,9 @@ function params=setAnalysisParams();
     params.outDir=fullfile(params.mainDir,params.expName,'SVM-data');
     params.timeCourseOutDir=fullfile(params.mainDir,params.expName,'time-course-results');
     params.multiTOutDir=fullfile(params.mainDir,params.expName,'multi-t-data', "audiomotor");
+    params.multiTOutDirAuditory=fullfile(params.mainDir,params.expName,'multi-t-data', "auditory-only");
     params.multiTOutDirMotor=fullfile(params.mainDir,params.expName,'multi-t-data', "motor-only");
     params.savenii=0; %% true for multi-t analysis data
     params.useMasking=1;
+    params.bUseSignificantVoxelsOnly = 0;
 end
