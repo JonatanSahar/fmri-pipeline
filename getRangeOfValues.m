@@ -36,8 +36,8 @@ function getRangeOfValues()
             else
                 pscMatrix = niftiread(pscFileName);
             end
-
-            pscMatrix(pscMatrix == 0) = NaN;
+            pscMatrix(pscMatrix  == -0.00001) = NaN;
+            pscMatrix(pscMatrix > -0.006 & pscMatrix  < 0.003) = NaN;
 
             % Get the trial start times.
             startTimes = round(str2double(T.start_time));
@@ -49,13 +49,13 @@ function getRangeOfValues()
             % Sample the trial's data where we found it's most likely to peak
             endTimes = startTimes + trialLength;
             % some scans are cut short - find the last actual trial we have
-            currMinTrials = max(find(endTimes < maxScanTime));
+             currMinTrials = max(find(endTimes < maxScanTime));
             endTimes = endTimes(1:currMinTrials);
             for t = 1:length(endTimes)
                 currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
                 trialData(:, :, :, :, t) = currTrialData;
             end
-            % Average time courses of all trials
+            % Average time courses of all psctrials
             meanTrialData = mean(trialData(:,:,:,:,trials(1:currMinTrials)), 5, 'omitnan');
             histogram(meanTrialData);
 

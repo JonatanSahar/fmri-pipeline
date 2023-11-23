@@ -63,30 +63,38 @@ function computeTimeCourse()
             ear = sprintf("%sE",T.ear(1));
             RHtrials = T.hand == "R";
             LHtrials = T.hand == "L";
-            % load percent-signal-change
+
+            %% load percent-signal-change data
             pscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d_%s.nii.gz", subId, runNumber, ear));
 
+            % Apply a mask of significant voxels from the multi-t analysis
             if params.bUseSignificantVoxelsOnly
-                % Apply a mask of significant voxels from the multi-t analysis
                 maskedPscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d_%s_masked.nii.gz", subId, runNumber, ear));
-                cmd = sprintf("fslmaths %s -mul %s %s", pscFileName, params.significantVoxelsMask.(ear).path, maskedPscFileName)
-                system(cmd);
-                pscMatrix = niftiread(maskedPscFileName);
-            else
-                pscMatrix = niftiread(pscFileName);
+                if ~exist(maskedPscFileName)
+                    cmd = sprintf("fslmaths %s -mul %s %s", pscFileName, params.significantVoxelsMask.(ear).path, maskedPscFileName)
+                    system(cmd);
+                    pscFileName = maskedPscFileName; % override filename
+                end
             end
 
-            pscMatrix(pscMatrix == 0) = NaN;
+            % Load the matrix
+            pscMatrix = niftiread(pscFileName);
 
+            % zeros from the mask, and 0.00001 from the PSC transofrmation will mess with the cross-voxel average
+            pscMatrix(pscMatrix == 0 | pscMatrix == 0.00001) = NaN;
+
+            %% extract trial data by time
             % Get the trial start times.
             startTimes = round(str2double(T.start_time));
             maxScanTime = size(pscMatrix, 4);
+
             % Get the average of the activation along the trial
             % trialData = pscMatrix(:, :, :, startTime:endTime);
             % meanTrialData = mean(trialData, 4);
 
             % Sample the trial's data where we found it's most likely to peak
             endTimes = startTimes + trialLength;
+
             % some scans are cut short - find the last actual trial we have
             currMinTrials = max(find(endTimes < maxScanTime));
             endTimes = endTimes(1:currMinTrials);
@@ -94,13 +102,12 @@ function computeTimeCourse()
                 currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
                 trialData(:, :, :, :, t) = currTrialData;
             end
+
             % Average time courses of all trials
             LHTrialData = mean(trialData(:,:,:,:,LHtrials(1:currMinTrials)), 5, 'omitnan');
             RHTrialData = mean(trialData(:,:,:,:,RHtrials(1:currMinTrials)), 5, 'omitnan');
 
-            % Average the time course of all voxels in each mask
-            % Iterate over each tuple and extract the values across the time dimension
-
+            %% Apply the auditory cortex mask
             auditoryCortexMean.leftC.RH = [];
             auditoryCortexMean.leftC.LH = [];
             auditoryCortexMean.rightC.RH = [];
@@ -115,25 +122,29 @@ function computeTimeCourse()
                     linearIndex = rightLinearIndex;
                 end
 
-                if ~params.bUseSignificantVoxelsOnly
-                    % Manually mask the results with the auditory localizer results
+                %  [x, y, z, t] = size(LHTrialData);
+                % mat = reshape(LHTrialData, x*y*z, t);
+                % matMasked = mat(linearIndex, :);
+                % LHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
+
+
+                % [x, y, z, t] = size(RHTrialData);
+                % mat = reshape(RHTrialData, x*y*z, t);
+                % matMasked = mat(linearIndex, :);
+                % RHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
+
                     for i = 1:length(linearIndex)
                         extractedValues(i, :) = squeeze(LHTrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                     end
-                    LHMeanTrialDataInMask = mean(extractedValues, 1);
+                    LHMeanTrialInMask = mean(extractedValues, 1, "omitnan");
 
-                    % Manually mask the results with the auditory localizer results
                     for i = 1:length(linearIndex)
                         extractedValues(i, :) = squeeze(RHTrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                     end
-                    RHMeanTrialDataInMask = mean(extractedValues, 1);
+                    RHMeanTrialInMask = mean(extractedValues, 1, "omitnan");
 
-                    auditoryCortexMean.(auditoryCortex).LH = LHMeanTrialDataInMask;
-                    auditoryCortexMean.(auditoryCortex).RH = RHMeanTrialDataInMask;
-                else
-                    auditoryCortexMean.(auditoryCortex).LH = mean(LHTrialData, 1, "omitnan");
-                    auditoryCortexMean.(auditoryCortex).RH = mean(RHTrialData, 1, "omitnan");
-                end
+                    auditoryCortexMean.(auditoryCortex).LH = LHMeanTrialInMask;
+                    auditoryCortexMean.(auditoryCortex).RH = RHMeanTrialInMask;
             end % for auditory cortex
 
             switch ear

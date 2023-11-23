@@ -4,7 +4,7 @@ function params=setAnalysisParams();
     % params.expName = 'auditorimotor-laterality';
     params.seed=2022;
     params.subjects=[101:116];
-    % params.subjects=[103];
+    % params.subjects=[101:103];
     params.discardedSubjects=[102, 104, 105, 107, 113];
     params.subjects = setdiff(params.subjects, params.discardedSubjects);
 
@@ -81,10 +81,10 @@ function params=setAnalysisParams();
     params.leftRoiMask.path= "/media/user/Data/fmri-data/analysis-output/L_auditory_cortex_mask.nii.gz";
     params.rightRoiMask.path= "/media/user/Data/fmri-data/analysis-output/R_auditory_cortex_mask.nii.gz";
     params.bilateralAuditoryCortexMask.path = "/media/user/Data/fmri-data/analysis-output/combined_auditory_cortex_mask.nii.gz";
-    params.significantVoxelsMask.LE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/LE_pMap_uthr_masked.nii.gz";
-    params.significantVoxelsMask.RE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/RE_pMap_uthr_masked.nii.gz";
-    params.significantVoxelsMask.bilateral.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/merged_pMap_uthr_masked.nii.gz";
-    params.significantVoxelsMask.motor.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/motor-only/motor_pMap_uthr_masked.nii.gz";
+    params.significantVoxelsMask.LE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/LE_significant_bin_mask.nii.gz";
+    params.significantVoxelsMask.RE.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/RE_significant_bin_mask.nii.gz";
+    params.significantVoxelsMask.bilateral.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/audiomotor/bilateral_significant_bin_mask.nii.gz";
+    params.significantVoxelsMask.motor.path = "/media/user/Data/fmri-data/analysis-output/multi-t-results/motor-only/motor_significant_bin_mask.nii.gz";
 
     %% multi T params
     params.numShuffels = 10;

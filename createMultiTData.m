@@ -65,7 +65,7 @@ function createMultiTData()
                                        subId, ...
                                        runNumber, ...
                                        ear));
-            if ~exist(fullfile(featDir,'filtered_func_data_MNI.nii.gz'),'file') || params.override
+            if ~exist(fullfile(featDir,'filtered_func_data_MNI.nii.gz'),'file') %|| params.override
                 tranformFeatDirToMNI(featDir)
             else
                 fprintf('MNI transform for subject %d run no. %d already exists\n', subId, runNumber)
@@ -73,13 +73,13 @@ function createMultiTData()
 
             % calculate percent-signal-change
             pscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
-            if ~exist(pscFileName, "file")
+            if ~exist(pscFileName, "file") || params.override
                 functionalDataPath = fullfile(featDir,'filtered_func_data_MNI.nii.gz');
-                fprintf("reading from %d, run %d", subId, runNumber)
+                fprintf("reading from %d, run %d\n", subId, runNumber)
                 functionalData = niftiread(functionalDataPath);
-                fprintf("done reading from %d, run %d", subId, runNumber)
+                fprintf("done reading from %d, run %d\n", subId, runNumber)
                 metadata = niftiinfo(functionalDataPath);
-                pscMatrix = calcPercentSignalChange(functionalData);
+                pscMatrix = single(calcPercentSignalChange(functionalData));
                 niftiwrite(pscMatrix, pscFileName, metadata, 'Compressed',true);
             else
                 pscMatrix = niftiread(pscFileName);
