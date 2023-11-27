@@ -97,5 +97,5 @@ function params=setAnalysisParams();
     params.multiTOutDirMotor=fullfile(params.mainDir,params.expName,'multi-t-data', "motor-only");
     params.savenii=0; %% true for multi-t analysis data
     params.useMasking=1;
-    params.bUseSignificantVoxelsOnly = 0;
+    params.bUseSignificantVoxelsOnly = 1;
 end

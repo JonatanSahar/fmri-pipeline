@@ -49,7 +49,7 @@ average_RE_RCortex_LH = mean(all_RE_RCortex_LH, 3);
 average_RE_RCortex_RH = mean(all_RE_RCortex_RH, 3);
 
 
-range = [6:10]; % Time in seconds to average across - peak activation time
+range = [7:13]; % Time in seconds to average across - peak activation time
 % Compute per-subjct mean across the scond dimension (time)
 subject_mean_LE_LCortex_LH = squeeze(mean(all_LE_LCortex_LH(1, range, :),  2))';
 subject_mean_LE_LCortex_RH = squeeze(mean(all_LE_LCortex_RH(1, range, :),  2))';

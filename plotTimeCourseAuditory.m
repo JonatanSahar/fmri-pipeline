@@ -9,7 +9,7 @@ function plotTimeCourseAuditory(cortex)
 % end
 %
 
-    params = setAnalysisParams();;
+    params = setAnalysisParams();
     data = load(fullfile(params.timeCourseOutDir, "time_course_auditory_mean.mat"));
     % Create the variable names dynamically
     varName_LE = strcat('average_LE', '_', cortex);
