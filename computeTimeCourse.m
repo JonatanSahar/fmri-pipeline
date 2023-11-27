@@ -122,16 +122,16 @@ function computeTimeCourse()
                     linearIndex = rightLinearIndex;
                 end
 
-                %  [x, y, z, t] = size(LHTrialData);
-                % mat = reshape(LHTrialData, x*y*z, t);
-                % matMasked = mat(linearIndex, :);
-                % LHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
+                 [x, y, z, t] = size(LHTrialData);
+                mat = reshape(LHTrialData, x*y*z, t);
+                matMasked = mat(linearIndex, :);
+                LHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
 
 
-                % [x, y, z, t] = size(RHTrialData);
-                % mat = reshape(RHTrialData, x*y*z, t);
-                % matMasked = mat(linearIndex, :);
-                % RHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
+                [x, y, z, t] = size(RHTrialData);
+                mat = reshape(RHTrialData, x*y*z, t);
+                matMasked = mat(linearIndex, :);
+                RHMeanTrialInMask1 = mean(matMasked, 1, "omitnan");
 
                     for i = 1:length(linearIndex)
                         extractedValues(i, :) = squeeze(LHTrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
@@ -161,19 +161,13 @@ function computeTimeCourse()
             end %switch
         end % for run
 
-        LE_LH = mean(cat(5, data_LE{1}.LH, data_LE{2}.LH), 5);
-        LE_RH = mean(cat(5, data_LE{1}.RH, data_LE{2}.RH), 5);
-        RE_LH = mean(cat(5, data_RE{1}.LH, data_RE{2}.LH), 5);
-        RE_RH = mean(cat(5, data_RE{1}.RH, data_RE{2}.RH), 5);
+        data_LE = mean(cat(5, data{1}.LE, data{2}.LE), 5);
+        data_RE = mean(cat(5, data{1}.RE, data{2}.RE), 5);
 
-        LE_LCortex_LH = mean(cat(1, data_LE{1}.auditoryCortexMean.leftC.LH, data_LE{2}.auditoryCortexMean.leftC.LH));
-        LE_LCortex_RH = mean(cat(1, data_LE{1}.auditoryCortexMean.leftC.RH, data_LE{2}.auditoryCortexMean.leftC.RH));
-        LE_RCortex_LH = mean(cat(1, data_LE{1}.auditoryCortexMean.rightC.LH, data_LE{2}.auditoryCortexMean.rightC.LH));
-        LE_RCortex_RH = mean(cat(1, data_LE{1}.auditoryCortexMean.rightC.RH, data_LE{2}.auditoryCortexMean.rightC.RH));
-        RE_LCortex_LH = mean(cat(1, data_RE{1}.auditoryCortexMean.leftC.LH, data_RE{2}.auditoryCortexMean.leftC.LH));
-        RE_LCortex_RH = mean(cat(1, data_RE{1}.auditoryCortexMean.leftC.RH, data_RE{2}.auditoryCortexMean.leftC.RH));
-        RE_RCortex_LH = mean(cat(1, data_RE{1}.auditoryCortexMean.rightC.LH, data_RE{2}.auditoryCortexMean.rightC.LH));
-        RE_RCortex_RH = mean(cat(1, data_RE{1}.auditoryCortexMean.rightC.RH, data_RE{2}.auditoryCortexMean.rightC.RH));
+        LE_LCortex = mean(cat(1, data{1}.auditoryCortexMean.leftC.LE, data{2}.auditoryCortexMean.leftC.LE));
+        LE_RCortex = mean(cat(1, data{1}.auditoryCortexMean.rightC.LE, data{2}.auditoryCortexMean.rightC.LE));
+        RE_LCortex = mean(cat(1, data{1}.auditoryCortexMean.leftC.RE, data{2}.auditoryCortexMean.leftC.RE));
+        RE_RCortex = mean(cat(1, data{1}.auditoryCortexMean.rightC.RE, data{2}.auditoryCortexMean.rightC.RE));
 
         info = "The mean across runs of trial activation (in % signal change), averaged within the auditory cortex. Each file represents a single subject";
         % Write to file

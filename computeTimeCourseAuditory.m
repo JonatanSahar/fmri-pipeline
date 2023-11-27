@@ -11,19 +11,26 @@ function computeTimeCourseAuditory()
 
     rightMaskImg.data=niftiread(params.rightRoiMask.path);
     rightMaskImg.info=niftiinfo(params.rightRoiMask.path);
-
-    leftMaskImg.data=niftiread(params.leftRoiMask.path);
-    leftMaskImg.info=niftiinfo(params.leftRoiMask.path);
-
     rightLinearIndex=find(rightMaskImg.data);
     [x,y,z]=ind2sub(size(rightMaskImg.data),rightLinearIndex);
     % These are the locations in 3D of all voxels belonging to the ROI
     rightLocations=[x,y,z];
 
+    leftMaskImg.data=niftiread(params.leftRoiMask.path);
+    leftMaskImg.info=niftiinfo(params.leftRoiMask.path);
     leftLinearIndex=find(leftMaskImg.data);
     [x,y,z]=ind2sub(size(leftMaskImg.data),leftLinearIndex);
     % These are the locations in 3D of all voxels belonging to the ROI
     leftLocations=[x,y,z];
+
+    bilateralMaskImg.data=niftiread(params.bilateralAuditoryCortexMask.path);
+    bilateralMaskImg.info=niftiinfo(params.bilateralAuditoryCortexMask.path);
+    bilateralLinearIndex=find(bilateralMaskImg.data);
+    [x,y,z]=ind2sub(size(bilateralMaskImg.data),bilateralLinearIndex);
+    % These are the locations in 3D of all voxels belonging to the ROI
+    bilateralLocations=[x,y,z];
+
+
     %% Initialize matrices for each combination
     % Trial parameters
     trialLength = 16; % 16 seconds/TRs
@@ -56,30 +63,37 @@ function computeTimeCourseAuditory()
             REtrials = T.ear == "R";
             LEtrials = T.ear == "L";
 
-            % load percent-signal-change
+            %% load percent-signal-change data
             pscFileName = fullfile(params.multiTOutDirAuditory, sprintf("%d_PercentSignalChange_%d_auditoryLoc.nii.gz", subId, runNumber));
-%             movefile(pscFileName, newPscFileName);
-            if bUseSignificantVoxelsOnly
-                % Apply a mask of significant voxels from the multi-t analysis
-                maskedPscFileName = fullfile(params.multiTOutDir, sprintf("%d_PercentSignalChange_%d_auditoryLoc_masked.nii.gz", subId, runNumber));
+
+            % Apply a mask of significant voxels from the multi-t analysis
+            if params.bUseSignificantVoxelsOnly
+                maskedPscFileName = fullfile(params.multiTOutDirAuditory, sprintf("%d_PercentSignalChange_%d_auditoryLoc_masked.nii.gz", subId, runNumber));
+                if ~exist(maskedPscFileName)
                 cmd = sprintf("fslmaths %s -mul %s %s", pscFileName, params.significantVoxelsMask.bilateral.path, maskedPscFileName)
-                system(cmd);
-                pscMatrix = niftiread(maskedPscFileName);
-            else
-                pscMatrix = niftiread(pscFileName);
+                    system(cmd);
+                    pscFileName = maskedPscFileName; % override filename
+                end
             end
 
-            pscMatrix(pscMatrix == 0) = NaN;
+            % Load the matrix
+            pscMatrix = niftiread(pscFileName);
 
+            % zeros from the mask, and 0.00001 from the PSC transofrmation will mess with the cross-voxel average
+            pscMatrix(pscMatrix == 0 | pscMatrix == 0.00001) = NaN;
+
+            %% extract trial data by time
             % Get the trial start times.
             startTimes = round(str2double(T.start_time));
             maxScanTime = size(pscMatrix, 4);
+
             % Get the average of the activation along the trial
             % trialData = pscMatrix(:, :, :, startTime:endTime);
             % meanTrialData = mean(trialData, 4);
 
             % Sample the trial's data where we found it's most likely to peak
             endTimes = startTimes + trialLength;
+
             % some scans are cut short - find the last actual trial we have
             currMinTrials = max(find(endTimes < maxScanTime));
             endTimes = endTimes(1:currMinTrials);
@@ -87,6 +101,7 @@ function computeTimeCourseAuditory()
                 currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
                 trialData(:, :, :, :, t) = currTrialData;
             end
+
             % Average time courses of all trials
             LETrialData = mean(trialData(:,:,:,:,LEtrials(1:currMinTrials)), 5, 'omitnan');
             RETrialData = mean(trialData(:,:,:,:,REtrials(1:currMinTrials)), 5, 'omitnan');
@@ -111,12 +126,12 @@ function computeTimeCourseAuditory()
                 for i = 1:length(linearIndex)
                     extractedValues(i, :) = squeeze(LETrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                 end
-                LEMeanTrialDataInMask = mean(extractedValues, 1);
+                LEMeanTrialDataInMask = mean(extractedValues, 1, "omitnan");
 
                 for i = 1:length(linearIndex)
                     extractedValues(i, :) = squeeze(RETrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                 end
-                REMeanTrialDataInMask = mean(extractedValues, 1);
+                REMeanTrialDataInMask = mean(extractedValues, 1, "omitnan");
 
                 auditoryCortexMean.(auditoryCortex).LE = LEMeanTrialDataInMask;
                 auditoryCortexMean.(auditoryCortex).RE = REMeanTrialDataInMask;

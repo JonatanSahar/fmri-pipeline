@@ -6,6 +6,7 @@ function params=setAnalysisParams();
     params.subjects=[101:116];
     % params.subjects=[101:103];
     params.discardedSubjects=[102, 104, 105, 107, 113];
+    % params.discardedSubjects=[102, 104, 105, 107, 113];
     params.subjects = setdiff(params.subjects, params.discardedSubjects);
 
     params.mainDir=params.baseDirPath;
