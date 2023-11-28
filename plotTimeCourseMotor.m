@@ -39,4 +39,5 @@ function plotTimeCourseMotor(cortex)
     fileName = fullfile(params.experimentDir,  "figures", fileName);
     saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
 
+    system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/")
 end

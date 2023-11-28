@@ -90,4 +90,5 @@ function plotTimeCourseOnePlot()
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
 
     end
+    system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/")
 end

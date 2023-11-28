@@ -13,6 +13,7 @@ function plotTimeCourse(ear, cortex)
 
     params = setAnalysisParams();;
     data = load(fullfile(params.timeCourseOutDir, "time_course_mean.mat"));
+
     % Create the variable names dynamically
     varName_LH = strcat('average_', ear, '_', cortex, '_LH');
     varName_RH = strcat('average_', ear, '_', cortex, '_RH');
@@ -40,5 +41,7 @@ function plotTimeCourse(ear, cortex)
     fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
     fileName = fullfile(params.experimentDir,  "figures", fileName);
     saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
+
+    system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/")
 
 end
