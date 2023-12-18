@@ -11,19 +11,26 @@ function computeTimeCourseMotor()
 
     rightMaskImg.data=niftiread(params.rightRoiMask.path);
     rightMaskImg.info=niftiinfo(params.rightRoiMask.path);
-
-    leftMaskImg.data=niftiread(params.leftRoiMask.path);
-    leftMaskImg.info=niftiinfo(params.leftRoiMask.path);
-
     rightLinearIndex=find(rightMaskImg.data);
     [x,y,z]=ind2sub(size(rightMaskImg.data),rightLinearIndex);
     % These are the locations in 3D of all voxels belonging to the ROI
     rightLocations=[x,y,z];
 
+    leftMaskImg.data=niftiread(params.leftRoiMask.path);
+    leftMaskImg.info=niftiinfo(params.leftRoiMask.path);
     leftLinearIndex=find(leftMaskImg.data);
     [x,y,z]=ind2sub(size(leftMaskImg.data),leftLinearIndex);
     % These are the locations in 3D of all voxels belonging to the ROI
     leftLocations=[x,y,z];
+
+    bilateralMaskImg.data=niftiread(params.bilateralAuditoryCortexMask.path);
+    bilateralMaskImg.info=niftiinfo(params.bilateralAuditoryCortexMask.path);
+    bilateralLinearIndex=find(bilateralMaskImg.data);
+    [x,y,z]=ind2sub(size(bilateralMaskImg.data),bilateralLinearIndex);
+    % These are the locations in 3D of all voxels belonging to the ROI
+    bilateralLocations=[x,y,z];
+
+
     %% Initialize matrices for each combination
     % Trial parameters
     trialLength = 16; % 16 seconds/TRs
@@ -56,11 +63,25 @@ function computeTimeCourseMotor()
             hand = sprintf("%sE",T.hand(1));
             RHtrials = T.hand == "R";
             LHtrials = T.hand == "L";
-            % load percent-signal-change
-%             pscFileName = fullfile(params.timeCourseOutDir, sprintf("%d_PercentSignalChange_%d.nii.gz", subId, runNumber));
-            newPscFileName = fullfile(params.multiTOutDirMotor, sprintf("%d_PercentSignalChange_%d_motorLoc.nii.gz", subId, runNumber));
-%             movefile(pscFileName, newPscFileName);
-            pscMatrix = niftiread(newPscFileName);
+
+            %% load percent-signal-change data
+            pscFileName = fullfile(params.multiTOutDirMotor, sprintf("%d_PercentSignalChange_%d_motorLoc.nii.gz", subId, runNumber));
+
+            % Apply a mask of significant voxels from the multi-t analysis
+            if params.bUseSignificantVoxelsOnly
+                maskedPscFileName = fullfile(params.multiTOutDirMotor, sprintf("%d_PercentSignalChange_%d_motorLoc_masked.nii.gz", subId, runNumber));
+                if ~exist(maskedPscFileName)
+                cmd = sprintf("fslmaths %s -mul %s %s", pscFileName, params.significantVoxelsMask.bilateral.path, maskedPscFileName)
+                    system(cmd);
+                    pscFileName = maskedPscFileName; % override filename
+                end
+            end
+
+            % Load the matrix
+            pscMatrix = niftiread(pscFileName);
+
+            % zeros from the mask, and 0.00001 from the PSC transofrmation will mess with the cross-voxel average
+            pscMatrix(pscMatrix == 0 | pscMatrix == 0.00001) = NaN;
 
             % Get the trial start times.
             startTimes = round(str2double(T.start_time));
@@ -78,9 +99,10 @@ function computeTimeCourseMotor()
                 currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
                 trialData(:, :, :, :, t) = currTrialData;
             end
-            % Average time courses across all trials
-            LHTrialData = mean(trialData(:,:,:,:,LHtrials(1:currMinTrials)), 5);
-            RHTrialData = mean(trialData(:,:,:,:,RHtrials(1:currMinTrials)), 5);
+
+            % Average time courses of all trials
+            LHTrialData = mean(trialData(:,:,:,:,LHtrials(1:currMinTrials)), 5, 'omitnan');
+            RHTrialData = mean(trialData(:,:,:,:,RHtrials(1:currMinTrials)), 5, 'omitnan');
 
             % Average the time course of all voxels in each mask
             % Iterate over each tuple and extract the values across the time dimension
@@ -102,12 +124,12 @@ function computeTimeCourseMotor()
                 for i = 1:length(linearIndex)
                     extractedValues(i, :) = squeeze(LHTrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                 end
-                LHMeanTrialDataInMask = mean(extractedValues, 1);
+                LHMeanTrialDataInMask = mean(extractedValues, 1, "omitnan");
 
                 for i = 1:length(linearIndex)
                     extractedValues(i, :) = squeeze(RHTrialData(locations(i, 1), locations(i, 2), locations(i, 3), :));
                 end
-                RHMeanTrialDataInMask = mean(extractedValues, 1);
+                RHMeanTrialDataInMask = mean(extractedValues, 1, "omitnan");
 
                 auditoryCortexMean.(auditoryCortex).LH = LHMeanTrialDataInMask;
                 auditoryCortexMean.(auditoryCortex).RH = RHMeanTrialDataInMask;

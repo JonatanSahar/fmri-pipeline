@@ -1,18 +1,17 @@
 function plotTimeCourseOnePlot()
     params = setAnalysisParams();
-    data = load(fullfile(params.experimentDir, "figures", "timeCourseSignificantVoxels", "time_course_mean.mat"));
+    data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSignificantVoxels", "time_course_motor_mean.mat"));
     auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
-    for ear = ["LE", "RE"]
         % Create the variable names dynamically
-        varName_LCortex_LH = strcat('average_', ear, '_LCortex', '_LH');
-        varName_LCortex_RH = strcat('average_', ear, '_LCortex', '_RH');
-        varName_RCortex_LH = strcat('average_', ear, '_RCortex', '_LH');
-        varName_RCortex_RH = strcat('average_', ear, '_RCortex', '_RH');
+        varName_LCortex_LH = strcat('average', '_LH', '_LCortex');
+        varName_LCortex_RH = strcat('average', '_RH', '_LCortex');
+        varName_RCortex_LH = strcat('average', '_LH', '_RCortex');
+        varName_RCortex_RH = strcat('average', '_RH', '_RCortex');
 
-        varName_LE_LCortex =  strcat('average_', ear, '_LCortex');
-        varName_LE_RCortex =  strcat('average_', ear, '_RCortex');
-        varName_RE_LCortex =  strcat('average_', ear, '_LCortex');
-        varName_RE_RCortex =  strcat('average_', ear, '_RCortex');
+        varName_LE_LCortex =  'average_LE_LCortex';
+        varName_LE_RCortex =  'average_LE_RCortex';
+        varName_RE_LCortex =  'average_RE_LCortex';
+        varName_RE_RCortex =  'average_RE_RCortex';
 
         % Access the data from the structure dynamically
         LCortex_LH_data = data.(varName_LCortex_LH);
@@ -31,15 +30,11 @@ function plotTimeCourseOnePlot()
         hold on
         plot(LCortex_LH_data, 'LineWidth', 1.5);
         plot(LCortex_RH_data, 'LineWidth', 1.5);
-       switch ear
-         case "LE"
         plot(LE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
-         case "RE"
         plot(RE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
-       end
 
         % Adding Title, Labels, and Legend
-        titleStr = sprintf("Average Activity Over Time: %s, LCortex", ear);
+        titleStr = sprintf("Average Activity Over Time: LCortex");
         title(titleStr);
         xlabel('Time (sec)');
         ylabel('Activity (% signal change)');
@@ -52,7 +47,7 @@ function plotTimeCourseOnePlot()
        hold off
 
         % Saving the figure to a jpg file
-        titleStr = sprintf("Average Activity Over Time %s LCortex joint", ear);
+        titleStr = sprintf("Average Activity Over Time LCortex joint");
         fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
         fileName = fullfile(params.experimentDir,  "figures", fileName);
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
@@ -62,15 +57,11 @@ function plotTimeCourseOnePlot()
         hold on
         plot(RCortex_LH_data,  'LineWidth', 1.5);
         plot(RCortex_RH_data,  'LineWidth', 1.5);
-       switch ear
-         case "LE"
         plot(LE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
-         case "RE"
         plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
-       end
 
         % Adding Title, Labels, and Legend
-        titleStr = sprintf("Average Activity Over Time: %s, RCortex", ear);
+        titleStr = sprintf("Average Activity Over Time: %s, RCortex");
         title(titleStr);
         xlabel('Time (sec)');
         ylabel('Activity (% signal change)');
@@ -84,12 +75,11 @@ function plotTimeCourseOnePlot()
        
 
         % Saving the figure to a jpg file
-        titleStr = sprintf("Average Activity Over Time %s RCortex joint", ear);
+        titleStr = sprintf("Average Activity Over Time %s RCortex joint");
         fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
         fileName = fullfile(params.experimentDir,  "figures", fileName);
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
 
-    end
     system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/")
     system("cd /home/user/Code/fMRI-pipeline/figures")
     system("git add *")
