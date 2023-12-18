@@ -61,7 +61,7 @@ function plotTimeCourseOnePlot()
         % plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
-        titleStr = sprintf("Average Activity Over Time: %s, RCortex");
+        titleStr = sprintf("Average Activity Over Time: RCortex");
         title(titleStr);
         xlabel('Time (sec)');
         ylabel('Activity (% signal change)');
@@ -69,7 +69,7 @@ function plotTimeCourseOnePlot()
         legend({ ...
                  ['LCortex, LH'], ...
                  ['LCortex, RH'], ...
-                 ['LCortex auditory']}, ...
+                 ['RCortex auditory']}, ...
                'Location', 'best'); % must be in this order - based on order of plotting above
        hold off
        
