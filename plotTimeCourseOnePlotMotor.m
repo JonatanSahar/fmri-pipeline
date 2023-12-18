@@ -30,7 +30,7 @@ function plotTimeCourseOnePlot()
         hold on
         plot(LCortex_LH_data, 'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
         plot(LCortex_RH_data, 'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
-        plot(LE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
+        % plot(LE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
         plot(RE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
@@ -57,8 +57,8 @@ function plotTimeCourseOnePlot()
         hold on
         plot(RCortex_LH_data,  'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
         plot(RCortex_RH_data,  'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
-        plot(LE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1, 0.4]);
-        plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
+        plot(LE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
+        % plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
         titleStr = sprintf("Average Activity Over Time: %s, RCortex");
