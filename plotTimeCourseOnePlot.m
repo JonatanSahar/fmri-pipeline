@@ -1,6 +1,6 @@
 function plotTimeCourseOnePlot()
     params = setAnalysisParams();
-    data = load(fullfile(params.experimentDir, "figures", "timeCourseSignificantVoxels", "time_course_mean.mat"));
+    data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSignificantVoxels", "time_course_mean.mat"));
     auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
     for ear = ["LE", "RE"]
         % Create the variable names dynamically
