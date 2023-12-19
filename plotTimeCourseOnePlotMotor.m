@@ -30,7 +30,7 @@ function plotTimeCourseOnePlot()
         hold on
         plot(LCortex_LH_data, 'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
         plot(LCortex_RH_data, 'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
-        % plot(LE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
+        plot(LE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
         plot(RE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
@@ -42,12 +42,13 @@ function plotTimeCourseOnePlot()
         legend({ ...
                  ['LCortex, LH'], ...
                  ['LCortex, RH'], ...
-                 ['LCortex auditory']}, ...
+                 ['LCortex, LE auditory'], ...
+                 ['LCortex, RE auditory']}, ...
                'Location', 'best'); % must be in this order - based on order of plotting above
        hold off
 
         % Saving the figure to a jpg file
-        titleStr = sprintf("Average Activity Over Time LCortex joint");
+        titleStr = sprintf("Average Activity Over Motor Time LCortex joint");
         fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
         fileName = fullfile(params.experimentDir,  "figures", fileName);
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
@@ -57,8 +58,8 @@ function plotTimeCourseOnePlot()
         hold on
         plot(RCortex_LH_data,  'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
         plot(RCortex_RH_data,  'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
-        plot(LE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
-        % plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
+        plot(LE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
+        plot(RE_RCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
         titleStr = sprintf("Average Activity Over Time: RCortex");
@@ -67,15 +68,16 @@ function plotTimeCourseOnePlot()
         ylabel('Activity (% signal change)');
         ylim([-0.3 0.6])
         legend({ ...
-                 ['LCortex, LH'], ...
-                 ['LCortex, RH'], ...
-                 ['RCortex auditory']}, ...
+                 ['RCortex, LH'], ...
+                 ['RCortex, RH'], ...
+                 ['RCortex, LE auditory'], ...
+                 ['RCortex, RE auditory']}, ...
                'Location', 'best'); % must be in this order - based on order of plotting above
        hold off
        
 
         % Saving the figure to a jpg file
-        titleStr = sprintf("Average Activity Over Time %s RCortex joint");
+        titleStr = sprintf("Average Activity Over Time Motor RCortex joint");
         fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
         fileName = fullfile(params.experimentDir,  "figures", fileName);
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
