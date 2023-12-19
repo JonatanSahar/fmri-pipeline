@@ -1,14 +1,18 @@
 function calculateANOVA()
     params = setAnalysisParams();
-    nusbs = numel(params.subjects)
     data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSignificantVoxels", "time_course_mean.mat"));
-    anova_data_LCortext = [cat(2, data.subject_mean_LE_LCortex_LH, data.subject_mean_LE_LCortex_RH)', cat(2, data.subject_mean_RE_LCortex_LH, data.subject_mean_RE_LCortex_RH)']
+    anova_data_LCortext = [data.subject_mean_LE_LCortex_LH', data.subject_mean_LE_LCortex_RH', data.subject_mean_RE_LCortex_LH', data.subject_mean_RE_LCortex_RH'];
+    anova_data_RCortext = [data.subject_mean_LE_RCortex_LH', data.subject_mean_LE_RCortex_RH', data.subject_mean_RE_RCortex_LH', data.subject_mean_RE_RCortex_RH']
 
-    anova_data_RCortext = [cat(2, data.subject_mean_LE_RCortex_LH, data.subject_mean_LE_RCortex_RH)', cat(2, data.subject_mean_RE_RCortex_LH, data.subject_mean_RE_RCortex_RH)']
+    WithinDesign = table({'LE', 'LE', 'RE', 'RE'}', {'LH', 'RH', 'LH', 'RH'}', ...
+                         'VariableNames', {'Ear', 'Hand'});
 
-    [~,~,stats_LCortex] = anova2(anova_data_LCortext,nsubs);
-    [~,~,stats_RCortex] = anova2(anova_data_RCortext,nsubs);
+    tblL = array2table(anova_data_LCortext, 'VariableNames', {'LE_LH', 'LE_RH', 'RE_LH', 'RE_RH'});
+    tblR = array2table(anova_data_RCortext, 'VariableNames', {'LE_LH', 'LE_RH', 'RE_LH', 'RE_RH'});
 
-    c_L = multcompare(stats_LCortex);
-    c_R = multcompare(stats_RCortex);
+    rm = fitrm(tblR, 'LE_LH-RE_RH ~ 1', 'WithinDesign', WithinDesign);
+    ranovatbl_LCortex = ranova(rm, 'WithinModel','Ear*Hand')
+
+    rm = fitrm(tblR, 'LE_LH-RE_RH ~ 1', 'WithinDesign', WithinDesign);
+    ranovatbl_RCortex = ranova(rm, 'WithinModel','Ear*Hand')
 end

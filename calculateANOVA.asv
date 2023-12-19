@@ -1,0 +1,21 @@
+function calculateANOVA()
+    params = setAnalysisParams();
+    nusbs = numel(params.subjects)
+    data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSignificantVoxels", "time_course_mean.mat"));
+    anova_data_LCortext = [data.subject_mean_LE_LCortex_LH', data.subject_mean_LE_LCortex_RH', data.subject_mean_RE_LCortex_LH', data.subject_mean_RE_LCortex_RH'];
+
+    tbl = array2table(anova_data_LCortext, 'VariableNames', {'LE_LH', 'LE_RH', 'RE_LH', 'RE_RH'});
+    WithinDesign = table(['LE'; 'LE'; 'RE'; 'RE'], ['LH'; 'RH'; 'LH'; 'RH'], ...
+                         'VariableNames', {'Ear', 'Hand'});
+
+    % Fit the repeated measures model
+    rm = fitrm(tbl, 'LE_LH-RE_RH ~ 1', 'WithinDesign', WithinDesign);
+    ranovatbl_LCortex = ranova(rm)
+
+    % anova_data_RCortext = [data.subject_mean_LE_RCortex_LH', data.subject_mean_LE_RCortex_RH', data.subject_mean_RE_RCortex_LH', data.subject_mean_RE_RCortex_RH']
+    % tbl = array2table(anova_data_LCortext, 'VariableNames', {'LE_LH', 'LE_RH', 'RE_LH', 'RE_RH'});
+    % tbl.SubjectID = [1:height(tbl)]'; % Add subject IDs
+    % WithinDesign = table(['LE'; 'LE'; 'RE'; 'RE'], ['LH'; 'RH'; 'LH'; 'RH'], ...
+    %                      'VariableNames', {'Ear', 'Hand'});
+    % ranovatbl_RCortex = ranova(rm);
+end
