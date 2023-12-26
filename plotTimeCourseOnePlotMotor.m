@@ -34,7 +34,7 @@ function plotTimeCourseOnePlot()
         plot(RE_LCortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding Title, Labels, and Legend
-        titleStr = sprintf("Average Activity Over Time: LCortex");
+        titleStr = sprintf("Average Activity Over Time LCortex");
         title(titleStr);
         xlabel('Time (sec)');
         ylabel('Activity (% signal change)');
@@ -48,7 +48,7 @@ function plotTimeCourseOnePlot()
        hold off
 
         % Saving the figure to a jpg file
-        titleStr = sprintf("Average Activity Over Motor Time LCortex joint");
+        titleStr = sprintf("Average Activity Over Time Motor LCortex joint");
         fileName = strcat(strrep(titleStr, " ", "_"), '.jpg'); % Replacing spaces with underscores for the filename
         fileName = fullfile(params.experimentDir,  "figures", fileName);
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
