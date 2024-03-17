@@ -48,11 +48,12 @@ function plotTimeCourseOnePlotSubplots()
     titleStr = "Average Activity Over Time Joint";
     fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
     fileName = fullfile("figures", fileName);
+    set(gcf, 'Position', get(0, 'Screensize'));
     saveas(gcf, fileName, 'jpg');
     
     % Copying and updating figure directory in git
-    system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/");
-%     system("cd /home/user/Code/fMRI-pipeline/figures");
-%     system("git add *");
-%     system('git commit -am "update figres dir (auto)"');
+    system("rsync -r  /home/user/Code/fMRI-pipeline/figures/ /media/user/Data/fmri-data/analysis-output/figures/");
+    system("cd /home/user/Code/fMRI-pipeline/figures");
+    system("git add *");
+    system('git commit -am "update figures dir (auto)"');
 end
