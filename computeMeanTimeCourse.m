@@ -5,7 +5,7 @@ function computeMeanTimeCourse()
     end
     rng(params.seed);
 
-% Get file names
+% Get file names, one per subject
 filePattern = fullfile(params.timeCourseOutDir, '*_time_course.mat');
 theFiles = dir(filePattern);
 
