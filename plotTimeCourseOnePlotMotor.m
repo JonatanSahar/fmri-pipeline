@@ -83,7 +83,7 @@ function plotTimeCourseOnePlot()
         saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
 
     system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/")
-    system("cd /home/user/Code/fMRI-pipeline/figures")
-    system("git add *")
-    system('git commit -am "update figres dir (auto)"');
+%     system("cd /home/user/Code/fMRI-pipeline/figures")
+%     system("git add *")
+%     system('git commit -am "update figres dir (auto)"');
 end
