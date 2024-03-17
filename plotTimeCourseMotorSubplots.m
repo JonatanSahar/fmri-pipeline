@@ -48,11 +48,12 @@ function plotTimeCourseMotorOnePlotSubplots()
     titleStr = sprintf("Average Activity Over Time Motor Cortex");
     fileName = strcat(strrep(titleStr, " ", "_"),'_subplots', '.jpg'); % Replacing spaces with underscores for the filename
     fileName = fullfile("figures", fileName);
+    set(gcf, 'Position', get(0, 'Screensize'));
     saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
     
     % Copying and updating figure directory in git
-    system("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/");
-%     system("cd /home/user/Code/fMRI-pipeline/figures");
-%     system("git add *");
-%     system('git commit -am "update figures dir (auto)"');
+    system("rsync -r  /home/user/Code/fMRI-pipeline/figures/ /media/user/Data/fmri-data/analysis-output/figures/");
+    system("cd /home/user/Code/fMRI-pipeline/figures");
+    system("git add *");
+    system('git commit -am "update figures dir (auto)"');
 end
