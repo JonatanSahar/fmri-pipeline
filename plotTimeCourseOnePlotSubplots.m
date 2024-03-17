@@ -48,6 +48,7 @@ function plotTimeCourseOnePlotSubplots()
     titleStr = "Average Activity Over Time Joint";
     fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
     fileName = fullfile("figures", fileName);
+
     set(gcf, 'Position', get(0, 'Screensize'));
     saveas(gcf, fileName, 'jpg');
     
