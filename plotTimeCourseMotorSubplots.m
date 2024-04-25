@@ -40,7 +40,7 @@ for i = 1:length(cortices)
     set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
     hold on;
-    lineWidth = 3;
+    lineWidth = 3.5;
 
     plot(LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
     plot(RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
@@ -53,7 +53,9 @@ for i = 1:length(cortices)
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
         ylim([-0.3 0.6]);
-        legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
+        if cortex == "RCortex"
+            legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
+        end
         hold off;
     end
 
