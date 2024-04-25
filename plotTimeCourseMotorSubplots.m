@@ -12,7 +12,6 @@ tcl = tiledlayout(1, 2);
 fontsize = 18; % Set your desired font size
 %     ax1 = nexttile;
 %     ax2 = nexttile;
-%     set([ax1, ax2], 'FontSize', fontsize);
 
 for i = 1:length(cortices)
     cortex = cortices(i);
@@ -30,7 +29,9 @@ for i = 1:length(cortices)
     RE_data = auditoryData.(varName_RE);
 
     % Plotting in next tile
-    nexttile;
+    ax = nexttile;
+    set([ax], 'FontSize', fontsize);
+
     hold on;
     plot(LH_data, 'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
     plot(RH_data, 'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
@@ -38,12 +39,7 @@ for i = 1:length(cortices)
     plot(RE_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
     % Adding title and labels
-    if cortex == "RCortex"
-        cortex_str = "Right Cortex"
-    else
-        cortex_str = "Left Cortex"
-
-        titleStr = sprintf("%s",cortex_str);
+        titleStr = sprintf("%s",cortex);
         title(titleStr, 'FontSize', fontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
