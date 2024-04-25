@@ -9,8 +9,8 @@ cortices = ["LCortex", "RCortex"];
 monitorPos = get(0, 'MonitorPositions'); % Get positions and sizes of all monitors
 secondaryMonitor = monitorPos(1, :); % Assuming the primary monitor is the first one
 
-figure('Position', secondaryMonitor); % Set figure position to primary monitor size
-% figure('Position', [100, 100, 1000,500]);
+% figure('Position', secondaryMonitor); % Set figure position to primary monitor size
+figure('Position', [100, 100, 2000,1000]);
 tcl = tiledlayout(1, 2);
 fontsize = 24; % Set your desired font 
 tickLabelFontSize = 20; % Font size for tick labels
