@@ -6,8 +6,14 @@ function plotTimeCourseMotorOnePlotSubplots()
     cortices = ["LCortex", "RCortex"];
     
     % Create tiled layout
+%     figure('Position', get(0, 'Screensize'));
+    figure('Position', [100, 100, 1000,500]);
     tcl = tiledlayout(1, 2);
-    
+    fontsize = 18; % Set your desired font size
+%     ax1 = nexttile;
+%     ax2 = nexttile;
+%     set([ax1, ax2], 'FontSize', fontsize);
+
     for i = 1:length(cortices)
         cortex = cortices(i);
         
@@ -34,21 +40,23 @@ function plotTimeCourseMotorOnePlotSubplots()
         % Adding title and labels
         titleStr = sprintf("Average Activity Over Time: %s", cortex);
         title(titleStr);
-        xlabel('Time (sec)');
-        ylabel('Activity (% signal change)');
+        xlabel('Time (sec)', 'FontSize', fontsize);
+        ylabel('Activity (% signal change)', 'FontSize', fontsize);
         ylim([-0.3 0.6]);
         legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
         hold off;
     end
     
     % Adding common title
-    title(tcl, 'Motor Activity Over Time');
+    title(tcl, 'Motor Activity Over Time', 'FontSize', fontsize);
     
     % Saving the figure to a jpg file
     titleStr = sprintf("Average Activity Over Time Motor Cortex");
     fileName = strcat(strrep(titleStr, " ", "_"),'_subplots', '.jpg'); % Replacing spaces with underscores for the filename
     fileName = fullfile("figures", fileName);
-    set(gcf, 'Position', get(0, 'Screensize'));
+    
+
+
     saveas(gcf, fileName, 'jpg'); % gcf gets the current figure handle, fileName is the desired file name, 'jpg' specifies the file format
     
     % Copying and updating figure directory in git
