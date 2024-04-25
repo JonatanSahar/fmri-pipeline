@@ -39,7 +39,7 @@ function plotTimeCourseMotorOnePlotSubplots()
 
         % Adding title and labels
         titleStr = sprintf("Average Activity Over Time: %s", cortex);
-        title(titleStr);
+        title(titleStr, 'FontSize', fontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
         ylim([-0.3 0.6]);
