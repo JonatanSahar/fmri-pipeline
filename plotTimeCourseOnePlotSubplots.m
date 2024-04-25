@@ -69,7 +69,7 @@ function plotTimeCourseOnePlotSubplots()
     fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
     fileName = fullfile("figures", fileName);
 
-    set(gcf, 'Position', get(0, 'Screensize'));
+%     set(gcf, 'Position', get(0, 'Screensize'));
     saveas(gcf, fileName, 'jpg');
     
     % Copying and updating figure directory in git
