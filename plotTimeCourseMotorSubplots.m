@@ -38,7 +38,12 @@ function plotTimeCourseMotorOnePlotSubplots()
         plot(RE_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding title and labels
-        titleStr = sprintf("%s", cortex);
+        if cortex =="RCortex"
+            cortex_str = "Right Cortex"
+        else 
+            cortex_str = "Left Cortex"
+            
+        titleStr = sprintf("%s",cortex_str);
         title(titleStr, 'FontSize', fontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
