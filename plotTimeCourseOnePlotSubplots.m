@@ -9,7 +9,7 @@ function plotTimeCourseOnePlotSubplots()
 
     for i = 1:length(ears)
       figure('Position', [100, 100, 2000,1000]);
-      tcl = tiledlayout(2, 2);
+      tcl = tiledlayout(1, 2);
       fontsize = 32; % Set your desired font
       subTitleFontsize = 20; % Set your desired font
       tickLabelFontSize = 24; % Font size for tick labels
