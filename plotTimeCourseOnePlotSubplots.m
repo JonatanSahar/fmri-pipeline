@@ -47,7 +47,16 @@ function plotTimeCourseOnePlotSubplots()
             title(titleStr, 'FontSize', fontsize);
             xlabel('Time (sec)');
             if cortex == "LCortex" & ear == "RE"
-                ylabel('Activity (% signal change)');
+                hLabel = ylabel('Activity (% signal change)');
+
+                % Get current position of the ylabel
+                currentPosition = get(hLabel, 'Position');
+
+                % Increase the y-value to shift it upwards
+                newPosition = currentPosition + [0 4 0]; % Adjust the 0.1 as needed
+
+                % Set the new position of the ylabel
+                set(hLabel, 'Position', newPosition);
             end
             ylim([-0.3 0.6]);
             legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
