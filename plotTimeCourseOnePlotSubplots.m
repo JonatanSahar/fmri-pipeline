@@ -4,18 +4,18 @@ function plotTimeCourseOnePlotSubplots()
     auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
     
     % Create tiled layout
-    figure('Position', [100, 100, 2000,1000]);
-    tcl = tiledlayout(2, 2);
-    fontsize = 32; % Set your desired font
-    subTitleFontsize = 20; % Set your desired font
-    tickLabelFontSize = 24; % Font size for tick labels
-
-    title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
-
     ears = ["LE", "RE"];
     cortices = ["LCortex", "RCortex"];
 
     for i = 1:length(ears)
+      figure('Position', [100, 100, 2000,1000]);
+      tcl = tiledlayout(2, 2);
+      fontsize = 32; % Set your desired font
+      subTitleFontsize = 20; % Set your desired font
+      tickLabelFontSize = 24; % Font size for tick labels
+
+      title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
+
         ear = ears(i);
         
         for j = 1:length(cortices)
@@ -63,16 +63,16 @@ function plotTimeCourseOnePlotSubplots()
             legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
             hold off;
         end
+        % Saving the figures to jpg files
+        titleStr = sprintf("Average Activity Over Time Joint %s %s", ear, cortex);
+        fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
+        fileName = fullfile("figures", fileName);
+
+        %     set(gcf, 'Position', get(0, 'Screensize'));
+        saveas(gcf, fileName, 'jpg');
     end
     
-    % Saving the figures to jpg files
-    titleStr = "Average Activity Over Time Joint";
-    fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
-    fileName = fullfile("figures", fileName);
 
-%     set(gcf, 'Position', get(0, 'Screensize'));
-    saveas(gcf, fileName, 'jpg');
-    
     % Copying and updating figure directory in git
     system("rsync -r  /home/user/Code/fMRI-pipeline/figures/ /media/user/Data/fmri-data/analysis-output/figures/");
     system("cd /home/user/Code/fMRI-pipeline/figures");
