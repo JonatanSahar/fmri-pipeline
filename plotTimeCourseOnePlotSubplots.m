@@ -43,7 +43,7 @@ function plotTimeCourseOnePlotSubplots()
             plot(Cortex_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
             % Adding title and labels
-            titleStr = sprintf("Average Activity Over Time: %s, %s", ear, cortex);
+            titleStr = sprintf("%s, %s", ear, cortex);
             title(titleStr, 'FontSize', fontsize);
             xlabel('Time (sec)');
             ylabel('Activity (% signal change)');
