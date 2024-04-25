@@ -64,7 +64,7 @@ function plotTimeCourseOnePlotSubplots()
             hold off;
         end
         % Saving the figures to jpg files
-        titleStr = sprintf("Average Activity Over Time Joint %s %s", ear, cortex);
+        titleStr = sprintf("Average Activity Over Time Joint %s", ear);
         fileName = strcat(strrep(titleStr, " ", "_"), '_subplots', '.jpg');
         fileName = fullfile("figures", fileName);
 
