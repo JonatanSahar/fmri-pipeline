@@ -4,8 +4,12 @@ function plotTimeCourseOnePlotSubplots()
     auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
     
     % Create tiled layout
+    figure('Position', [100, 100, 2000,1000]);
     tcl = tiledlayout(2, 2);
-    title(tcl, 'Average Activity Over Time');
+    fontsize = 32; % Set your desired font
+    tickLabelFontSize = 24; % Font size for tick labels
+
+    title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
 
     ears = ["LE", "RE"];
     cortices = ["LCortex", "RCortex"];
@@ -27,15 +31,20 @@ function plotTimeCourseOnePlotSubplots()
             Cortex_data = auditoryData.(varName_Cortex);
 
             % Plotting in next tile
-            nexttile;
+            ax = nexttile;
+            set([ax], 'FontSize', fontsize);
+            set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
+            set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
+
             hold on;
-            plot(LH_data, 'LineWidth', 1.5);
-            plot(RH_data, 'LineWidth', 1.5);
-            plot(Cortex_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
+            lineWidth = 3.5;
+            plot(LH_data, 'LineWidth', lineWidth);
+            plot(RH_data, 'LineWidth', lineWidth);
+            plot(Cortex_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
             % Adding title and labels
             titleStr = sprintf("Average Activity Over Time: %s, %s", ear, cortex);
-            title(titleStr);
+            title(titleStr, 'FontSize', fontsize);
             xlabel('Time (sec)');
             ylabel('Activity (% signal change)');
             ylim([-0.3 0.6]);
