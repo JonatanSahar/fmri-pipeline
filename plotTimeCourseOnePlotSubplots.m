@@ -32,7 +32,7 @@ function plotTimeCourseOnePlotSubplots()
 
             % Plotting in next tile
             ax = nexttile;
-            set([ax], 'FontSize', fontsize);
+            set([ax], 'FontSize', fontsize-4);
             set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
             set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
