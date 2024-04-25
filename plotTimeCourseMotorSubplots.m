@@ -38,7 +38,7 @@ function plotTimeCourseMotorOnePlotSubplots()
         plot(RE_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
 
         % Adding title and labels
-        titleStr = sprintf("Average Activity Over Time: %s", cortex);
+        titleStr = sprintf("%s", cortex);
         title(titleStr, 'FontSize', fontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
@@ -48,7 +48,7 @@ function plotTimeCourseMotorOnePlotSubplots()
     end
     
     % Adding common title
-    title(tcl, 'Motor Activity Over Time', 'FontSize', fontsize);
+    title(tcl, 'Average Motor Activity Over Time', 'FontSize', fontsize);
     
     % Saving the figure to a jpg file
     titleStr = sprintf("Average Activity Over Time Motor Cortex");
