@@ -7,6 +7,7 @@ function plotTimeCourseOnePlotSubplots()
     figure('Position', [100, 100, 2000,1000]);
     tcl = tiledlayout(2, 2);
     fontsize = 32; % Set your desired font
+    subTitleFontsize = 26; % Set your desired font
     tickLabelFontSize = 24; % Font size for tick labels
 
     title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
@@ -44,7 +45,7 @@ function plotTimeCourseOnePlotSubplots()
 
             % Adding title and labels
             titleStr = sprintf("%s, %s", ear, cortex);
-            title(titleStr, 'FontSize', fontsize);
+            title(titleStr, 'FontSize', subTitleFontsize);
             xlabel('Time (sec)');
             if cortex == "LCortex" & ear == "RE"
                 hLabel = ylabel('Activity (% signal change)');
