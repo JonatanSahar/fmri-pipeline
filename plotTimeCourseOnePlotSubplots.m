@@ -11,7 +11,7 @@ function plotTimeCourseOnePlotSubplots()
       figure('Position', [100, 100, 2000,1000]);
       tcl = tiledlayout(1, 2);
       fontsize = 32; % Set your desired font
-      subTitleFontsize = 20; % Set your desired font
+      subTitleFontsize = 24; % Set your desired font
       tickLabelFontSize = 24; % Font size for tick labels
 
       title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
