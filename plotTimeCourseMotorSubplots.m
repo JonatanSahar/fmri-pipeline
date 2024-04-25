@@ -9,7 +9,9 @@ cortices = ["LCortex", "RCortex"];
 %     figure('Position', get(0, 'Screensize'));
 figure('Position', [100, 100, 1000,500]);
 tcl = tiledlayout(1, 2);
-fontsize = 18; % Set your desired font size
+fontsize = 18; % Set your desired font 
+tickLabelFontSize = 16; % Font size for tick labels
+
 %     ax1 = nexttile;
 %     ax2 = nexttile;
 
@@ -31,6 +33,8 @@ for i = 1:length(cortices)
     % Plotting in next tile
     ax = nexttile;
     set([ax], 'FontSize', fontsize);
+    set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
+    set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
     hold on;
     plot(LH_data, 'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
