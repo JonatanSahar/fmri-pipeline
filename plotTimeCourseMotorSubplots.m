@@ -1,4 +1,4 @@
-function plotTimeCourseMotorOnePlotSubplots()
+function plotTimeCourseMotorSubplots()
 params = setAnalysisParams();
 data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSignificantVoxels", "time_course_motor_mean.mat"));
 auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
@@ -40,10 +40,12 @@ for i = 1:length(cortices)
     set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
     hold on;
-    plot(LH_data, 'LineWidth', 1.5, 'Color', [0.9 0.1 0.1]);
-    plot(RH_data, 'LineWidth', 1.5, 'Color', [0.2 0.5 0.9]);
-    plot(LE_data, "--", 'LineWidth', 1.9, 'Color', [0.9 0.1 0.1 0.4]);
-    plot(RE_data, "--", 'LineWidth', 1.9, 'Color', [0.2 0.5 0.9 0.4]);
+    lineWidth = 2.5;
+
+    plot(LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
+    plot(RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
+    plot(LE_data, "--", 'LineWidth', lineWidth, 'Color', [0.9 0.1 0.1 0.4]);
+    plot(RE_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
     % Adding title and labels
         titleStr = sprintf("%s",cortex);
