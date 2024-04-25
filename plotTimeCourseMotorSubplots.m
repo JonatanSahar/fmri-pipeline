@@ -40,7 +40,7 @@ for i = 1:length(cortices)
     set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
     hold on;
-    lineWidth = 2.5;
+    lineWidth = 3;
 
     plot(LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
     plot(RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
