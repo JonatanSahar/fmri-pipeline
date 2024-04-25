@@ -46,7 +46,9 @@ function plotTimeCourseOnePlotSubplots()
             titleStr = sprintf("%s, %s", ear, cortex);
             title(titleStr, 'FontSize', fontsize);
             xlabel('Time (sec)');
-            ylabel('Activity (% signal change)');
+            if cortex == "LCortex" & ear == "RE"
+                ylabel('Activity (% signal change)');
+            end
             ylim([-0.3 0.6]);
             legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
             hold off;
