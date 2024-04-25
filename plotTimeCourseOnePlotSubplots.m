@@ -60,7 +60,9 @@ function plotTimeCourseOnePlotSubplots()
                 set(hLabel, 'Position', newPosition);
             end
             ylim([-0.3 0.6]);
-            legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
+            if cortex == "RCortex"
+              legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
+              end
             hold off;
         end
         % Saving the figures to jpg files
