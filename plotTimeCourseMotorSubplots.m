@@ -12,7 +12,7 @@ secondaryMonitor = monitorPos(1, :); % Assuming the primary monitor is the first
 % figure('Position', secondaryMonitor); % Set figure position to primary monitor size
 figure('Position', [100, 100, 2000,1000]);
 tcl = tiledlayout(1, 2);
-fontsize = 28; % Set your desired font 
+fontsize = 100; % Set your desired font 
 tickLabelFontSize = 24; % Font size for tick labels
 
 %     ax1 = nexttile;
