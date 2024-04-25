@@ -53,7 +53,7 @@ function plotTimeCourseOnePlotSubplots()
                 currentPosition = get(hLabel, 'Position');
 
                 % Increase the y-value to shift it upwards
-                newPosition = currentPosition + [0 4 0]; % Adjust the 0.1 as needed
+                newPosition = currentPosition + [0 0.5 0]; % Adjust the 0.1 as needed
 
                 % Set the new position of the ylabel
                 set(hLabel, 'Position', newPosition);
