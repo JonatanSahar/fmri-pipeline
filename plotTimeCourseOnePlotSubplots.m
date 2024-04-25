@@ -46,19 +46,19 @@ function plotTimeCourseOnePlotSubplots()
             % Adding title and labels
             titleStr = sprintf("%s, %s", ear, cortex);
             title(titleStr, 'FontSize', subTitleFontsize);
-            if cortex == "LCortex"
-              hLabel = xlabel('Time (sec)');
+            xlabel('Time (sec)');
+            if cortex == "LCortex" 
+                hLabel = ylabel('Activity (% signal change)');
 
                 % Get current position of the ylabel
                 currentPosition = get(hLabel, 'Position');
 
                 % Increase the y-value to shift it upwards
-                newPosition = currentPosition + [12 0 0]; % Adjust the 0.1 as needed
+                newPosition = currentPosition + [0 0 0]; % Adjust the 0.1 as needed
 
                 % Set the new position of the ylabel
                 set(hLabel, 'Position', newPosition);
             end
-                ylabel('Activity (% signal change)');
             ylim([-0.3 0.6]);
             legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
             hold off;
