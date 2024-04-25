@@ -12,7 +12,8 @@ secondaryMonitor = monitorPos(1, :); % Assuming the primary monitor is the first
 % figure('Position', secondaryMonitor); % Set figure position to primary monitor size
 figure('Position', [100, 100, 2000,1000]);
 tcl = tiledlayout(1, 2);
-fontsize = 32; % Set your desired font 
+fontsize = 32; % Set your desired font
+subtitleFontsize = 24; % Set your desired font
 tickLabelFontSize = 24; % Font size for tick labels
 
 %     ax1 = nexttile;
@@ -49,7 +50,7 @@ for i = 1:length(cortices)
 
     % Adding title and labels
         titleStr = sprintf("%s",cortex);
-        title(titleStr, 'FontSize', fontsize);
+        title(titleStr, 'FontSize', subtitleFontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
         ylim([-0.3 0.6]);
