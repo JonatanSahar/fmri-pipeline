@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gamma
 from scipy.signal import convolve
+import os
+import subprocess
 
 
 def double_gamma_hrf(tr=2.0, duration=32.0, oversampling=16, onset=0.0):
@@ -100,45 +102,44 @@ df_combined2 = pd.concat([df2, df2_stimulus])
 plt.figure(figsize=(12, 8))
 
 # Plot for Stimulus Series 1
+axis_font_size = 20
+title_font_size = 25
 plt.subplot(2, 1, 1)
-sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined1, markers=False)
-plt.title('HRF Convolved with Stimulus Series 1')
-plt.ylim(-1, 12)  # Adjust y-axis limits for better visualization
+plot1 = sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined1, markers=False)
+plt.title('HRF Convolved with condensed stimulus train', fontsize=title_font_size)
+plt.xlabel('Time (s)', fontsize=axis_font_size)
+plt.ylabel('Response', fontsize=axis_font_size)
+plt.ylim(-1, axis_font_size)
+
+# Manually setting legend labels for the top plot
+handles, labels = plot1.get_legend_handles_labels()
+plt.legend(handles=handles, labels=['Modeled response', 'Stimulus train'], loc='upper right')
 
 # Plot for Stimulus Series 2
 plt.subplot(2, 1, 2)
-sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined2, markers=False)
-plt.title('HRF Convolved with Stimulus Series 2')
-plt.ylim(-1, 12)  # Adjust y-axis limits for better visualization
+plot2 = sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined2, markers=False)
+plt.title('HRF Convolved with evenly spread stimulus train', fontsize=title_font_size)
+plt.xlabel('Time (s)', fontsize=axis_font_size)
+plt.ylabel('Response', fontsize=axis_font_size)
+plt.ylim(-1, axis_font_size)
+plot2.get_legend().remove()
 
 plt.tight_layout()
+
+# Save figure
+titleStr = "modelled HRF"
+fileName = titleStr.replace(" ", "_") + '.jpg'
+filePath = os.path.join("/home/yonatan/Documents/projects/thesis/figures", fileName)
+plt.savefig(filePath, dpi=300)
+
+# Then display
 plt.show()
+# # Copy files to the destination directory
+# subprocess.run("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/".split())
 
+# # Change directory to the figures location
+# os.chdir("/home/user/Code/fMRI-pipeline/figures")
 
-
-
-# # plotting
-# plt.figure(figsize=(12, 8))
-
-# # plot for stimulus series 1
-# plt.subplot(2, 1, 1)
-# plt.plot(time_vector, extended_stimulus1, label='stimulus series 1', linestyle='--', alpha=0.7)
-# plt.plot(time_vector, extended_convolved1, label='hrf convolved with stimulus 1')
-# plt.xlabel('time (s)')
-# plt.ylabel('response')
-# plt.title('hrf convolved with stimulus series 1')
-# plt.legend()
-# plt.ylim(-1, 12)  # adjust y-axis limits for better visualization
-
-# # plot for stimulus series 2
-# plt.subplot(2, 1, 2)
-# plt.plot(time_vector, extended_stimulus2, label='stimulus series 2', linestyle='--', alpha=0.7)
-# plt.plot(time_vector, extended_convolved2, label='hrf convolved with stimulus 2')
-# plt.xlabel('time (s)')
-# plt.ylabel('response')
-# plt.title('hrf convolved with stimulus series 2')
-# plt.legend()
-# plt.ylim(-1, 12)  # adjust y-axis limits for better visualization
-
-# plt.tight_layout()
-# plt.show()
+# Add files to git
+subprocess.run("git add *".split())
+subprocess.run('git commit -am "update figres dir (auto)"'.split())
