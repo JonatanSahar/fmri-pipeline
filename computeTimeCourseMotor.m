@@ -95,10 +95,28 @@ function computeTimeCourseMotor()
             % some scans are cut short - find the last actual trial we have
             currMinTrials = max(find(endTimes < maxScanTime));
             endTimes = endTimes(1:currMinTrials);
-            for t = 1:length(endTimes)
-                currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
-                trialData(:, :, :, :, t) = currTrialData;
-            end
+            
+           % Define the number of seconds before each trial's start time for baseline
+           baselineDuration = 3; 
+
+           for t = 1:length(endTimes)
+               % Extract the trial data
+               currTrialData = pscMatrix(:, :, :, startTimes(t):endTimes(t));
+
+               % Determine the baseline period for the current trial
+               baselineStart = max(1, startTimes(t) - baselineDuration); % Ensure not to go below 1
+               baselineData = pscMatrix(:, :, :, baselineStart:startTimes(t));
+
+               % Calculate the mean baseline for each channel, and time point
+               baselineMean = mean(baselineData, 4); % Mean across time
+
+               % Normalize the trial data by the baseline
+               normalizedTrialData = currTrialData ./ baselineMean;
+
+               % Store the normalized trial data
+               trialData(:, :, :, :, t) = normalizedTrialData;
+           end
+
 
             % Average time courses of all trials
             LHTrialData = mean(trialData(:,:,:,:,LHtrials(1:currMinTrials)), 5, 'omitnan');

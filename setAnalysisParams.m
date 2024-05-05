@@ -1,4 +1,4 @@
-function params=setAnalysisParams();
+function params=setAnalysisParams()
     params.baseDirPath = '/media/user/Data/fmri-data/';
     params.expName = 'analysis-output';
     % params.expName = 'auditorimotor-laterality';
