@@ -102,18 +102,20 @@ df_combined2 = pd.concat([df2, df2_stimulus])
 plt.figure(figsize=(12, 8))
 
 # Plot for Stimulus Series 1
-axis_font_size = 20
-title_font_size = 25
+axis_font_size = 18
+title_font_size = 20
 plt.subplot(2, 1, 1)
 plot1 = sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined1, markers=False)
 plt.title('HRF Convolved with condensed stimulus train', fontsize=title_font_size)
 plt.xlabel('Time (s)', fontsize=axis_font_size)
 plt.ylabel('Response', fontsize=axis_font_size)
 plt.ylim(-1, axis_font_size)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
 
 # Manually setting legend labels for the top plot
 handles, labels = plot1.get_legend_handles_labels()
-plt.legend(handles=handles, labels=['Modeled response', 'Stimulus train'], loc='upper right')
+plt.legend(handles=handles, labels=['Modeled response', 'Stimulus train'], loc='upper right', prop={'size': 18})
 
 # Plot for Stimulus Series 2
 plt.subplot(2, 1, 2)
@@ -124,6 +126,8 @@ plt.ylabel('Response', fontsize=axis_font_size)
 plt.ylim(-1, axis_font_size)
 plot2.get_legend().remove()
 
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
 plt.tight_layout()
 
 # Save figure
@@ -134,6 +138,7 @@ plt.savefig(filePath, dpi=300)
 
 # Then display
 plt.show()
+
 # # Copy files to the destination directory
 # subprocess.run("rsync -r /media/user/Data/fmri-data/analysis-output/figures/ /home/user/Code/fMRI-pipeline/figures/".split())
 
@@ -141,5 +146,5 @@ plt.show()
 # os.chdir("/home/user/Code/fMRI-pipeline/figures")
 
 # Add files to git
-subprocess.run("git add *".split())
-subprocess.run('git commit -am "update figres dir (auto)"'.split())
+# subprocess.run("git add *".split())
+# subprocess.run('git commit -am "update figres dir (auto)"'.split())
