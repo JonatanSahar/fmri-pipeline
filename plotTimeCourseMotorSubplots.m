@@ -45,8 +45,8 @@ for i = 1:length(cortices)
 
     plot(LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
     plot(RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
-    plot(LE_data, "--", 'LineWidth', lineWidth, 'Color', [0.9 0.1 0.1 0.4]);
-    plot(RE_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
+%     plot(LE_data, "--", 'LineWidth', lineWidth, 'Color', [0.9 0.1 0.1 0.4]);
+%     plot(RE_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
     % Adding title and labels
         titleStr = sprintf("%s",cortex);
@@ -55,7 +55,8 @@ for i = 1:length(cortices)
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
         ylim([-0.3 0.6]);
         if cortex == "RCortex"
-            legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
+%             legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
+            legend({'LH', 'RH'}, 'Location', 'best');
         end
         hold off;
     end

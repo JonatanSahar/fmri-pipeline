@@ -102,13 +102,13 @@ plt.figure(figsize=(12, 8))
 # Plot for Stimulus Series 1
 plt.subplot(2, 1, 1)
 sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined1, markers=False)
-plt.title('HRF Convolved with Stimulus Series 1')
+plt.title('HRF Convolved with compressed stimulus train', fontsize=20)
 plt.ylim(-1, 12)  # Adjust y-axis limits for better visualization
 
 # Plot for Stimulus Series 2
 plt.subplot(2, 1, 2)
 sns.lineplot(x='Time (s)', y='Response', hue='Series', style='Series', data=df_combined2, markers=False)
-plt.title('HRF Convolved with Stimulus Series 2')
+plt.title('HRF Convolved with evenly-spaced stimulus train', fontsize=20)
 plt.ylim(-1, 12)  # Adjust y-axis limits for better visualization
 
 plt.tight_layout()
