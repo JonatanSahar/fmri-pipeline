@@ -48,6 +48,12 @@ for i = 1:length(ears)
         plot(x_indices, RH_data, 'LineWidth', lineWidth);
         plot(x_indices, Cortex_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
+
+        % Setting the x-axis and y-axis tick labels
+        set(ax, 'XTick', x_indices, 'XTickLabel', x_indices);
+        set(ax, 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
+        set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
+
         % Adding title and labels
         titleStr = sprintf("%s, %s", earName, cortexName);
         title(titleStr, 'FontSize', subTitleFontsize);
