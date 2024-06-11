@@ -36,8 +36,8 @@ for i = 1:length(ears)
         % Plotting in next tile
         ax = nexttile;
         set([ax], 'FontSize', fontsize-10);
-        set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
-        set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
+%         set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
+%         set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
 
         % Ensure tick labels are set to indices
         x_indices = 1:length(LH_data); % Assuming all data have the same length
