@@ -4,6 +4,7 @@ data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSig
 auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
 
 cortices = ["LCortex", "RCortex"];
+cortexNames = ["Left auditory cortex", "Right auditory cortex"]
 
 % Create tiled layout
 monitorPos = get(0, 'MonitorPositions'); % Get positions and sizes of all monitors
@@ -21,6 +22,7 @@ tickLabelFontSize = 24; % Font size for tick labels
 
 for i = 1:length(cortices)
     cortex = cortices(i);
+    cortexName = cortexNames(i)
 
     % Create the variable names dynamically
     varName_LH = strcat('average', '_LH', '_', cortex);
@@ -37,19 +39,19 @@ for i = 1:length(cortices)
     % Plotting in next tile
     ax = nexttile;
     set([ax], 'FontSize', fontsize);
-    set([ax], 'XTickLabel', num2cell(get(ax, 'XTick')), 'XTickLabelMode', 'manual', 'YTickLabel', num2cell(get(ax, 'YTick')), 'YTickLabelMode', 'manual');
-    set([ax], {'FontSize'}, {tickLabelFontSize}); % Specific font size for tick labels
+    x_indices = 1:length(LH_data); % Assuming all data have the same length
+    x_indices = x_indices -1
 
     hold on;
     lineWidth = 3.5;
 
-    plot(LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
-    plot(RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
+    plot(x_indices, LH_data, 'LineWidth', lineWidth,'Color', [0.9 0.1 0.1]);
+    plot(x_indices, RH_data, 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9]);
 %     plot(LE_data, "--", 'LineWidth', lineWidth, 'Color', [0.9 0.1 0.1 0.4]);
 %     plot(RE_data, "--", 'LineWidth', lineWidth, 'Color', [0.2 0.5 0.9 0.4]);
 
     % Adding title and labels
-        titleStr = sprintf("%s",cortex);
+        titleStr = sprintf("%s", cortexName);
         title(titleStr, 'FontSize', subtitleFontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
