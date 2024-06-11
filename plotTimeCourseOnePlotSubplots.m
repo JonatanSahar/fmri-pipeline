@@ -62,7 +62,7 @@ for i = 1:length(ears)
             % Set the new position of the ylabel
             set(hLabel, 'Position', newPosition);
         end
-        ylim([-0.2 0.3]);
+        ylim([-0.3 0.5]);
         if cortex == "RCortex"
             legend({'LH', 'RH', 'Auditory only'}, 'Location', 'best');
         end
