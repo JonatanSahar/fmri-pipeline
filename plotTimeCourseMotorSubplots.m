@@ -64,7 +64,7 @@ for i = 1:length(cortices)
     end
 
     % Adding common title
-    title(tcl, 'Mean BOLD signal\nSilent (motor-only) condition', 'FontSize', fontsize);
+    title(tcl, 'nSilent (motor-only) condition', 'FontSize', fontsize);
 
     % Saving the figure to a jpg file
     titleStr = sprintf("Average Activity Over Time Motor Cortex");
