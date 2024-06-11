@@ -16,7 +16,7 @@ for i = 1:length(ears)
     subTitleFontsize = 24; % Set your desired font
     tickLabelFontSize = 24; % Font size for tick labels
 
-    title(tcl, 'Average Activity Over Time', 'FontSize', fontsize);
+    title(tcl, 'Auditory-motor condition', 'FontSize', fontsize);
 
     ear = ears(i);
     earName = earNames(i)
