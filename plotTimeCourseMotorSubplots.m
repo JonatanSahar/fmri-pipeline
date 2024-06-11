@@ -35,6 +35,22 @@ for i = 1:length(cortices)
     RH_data = data.(varName_RH);
     LE_data = auditoryData.(varName_LE);
     RE_data = auditoryData.(varName_RE);
+    
+    % Compute summary statistics
+    LH_mean = mean(LH_data);
+    LH_sd = std(LH_data);
+    RH_mean = mean(RH_data);
+    RH_sd = std(RH_data);
+
+    % Perform t-test
+    [h, pvalue, ci, stats] = ttest(LH_data, RH_data);
+    tvalue = stats.tstat;
+
+    % Print summary statistics and t-test results
+    fprintf('Summary for %s:\n', cortexName);
+    fprintf('LH Mean: %.2f, LH SD: %.2f\n', LH_mean, LH_sd);
+    fprintf('RH Mean: %.2f, RH SD: %.2f\n', RH_mean, RH_sd);
+    fprintf('t-value: %.2f, p-value: %.4f\n\n', tvalue, pvalue);
 
     % Plotting in next tile
     ax = nexttile;
