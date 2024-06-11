@@ -55,7 +55,7 @@ for i = 1:length(cortices)
         title(titleStr, 'FontSize', subtitleFontsize);
         xlabel('Time (sec)', 'FontSize', fontsize);
         ylabel('Activity (% signal change)', 'FontSize', fontsize);
-        ylim([-0.3 0.6]);
+        ylim([-0.2 0.3]);
         if cortex == "RCortex"
 %             legend({'LH', 'RH', 'LE auditory', 'RE auditory'}, 'Location', 'best');
             legend({'LH', 'RH'}, 'Location', 'best');
