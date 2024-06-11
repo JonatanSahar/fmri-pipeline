@@ -39,7 +39,7 @@ for i = 1:length(ears)
 
         % Ensure tick labels are set to indices
         x_indices = 1:length(LH_data); % Assuming all data have the same length
-
+        x_indices = x_indices -1
         hold on;
         lineWidth = 3.5;
         plot(x_indices, LH_data, 'LineWidth', lineWidth);
