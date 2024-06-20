@@ -4,7 +4,7 @@ data = load(fullfile(params.experimentDir, "time-course-results", "timeCourseSig
 auditoryData = load(fullfile(params.timeCourseOutDir,  'time_course_auditory_mean.mat'));
 
 cortices = ["LCortex", "RCortex"];
-cortexNames = ["Left auditory cortex", "Right auditory cortex"]
+cortexNames = ["Left auditory cortex", "Right auditory cortex"];
 
 % Create tiled layout
 monitorPos = get(0, 'MonitorPositions'); % Get positions and sizes of all monitors
@@ -22,11 +22,14 @@ tickLabelFontSize = 24; % Font size for tick labels
 
 for i = 1:length(cortices)
     cortex = cortices(i);
-    cortexName = cortexNames(i)
+    cortexName = cortexNames(i);
 
     % Create the variable names dynamically
     varName_LH = strcat('average', '_LH', '_', cortex);
     varName_RH = strcat('average', '_RH', '_', cortex);
+    varName_LH_all = strcat('subject_mean', '_LH', '_', cortex);
+    varName_RH_all = strcat('subject_mean', '_RH', '_', cortex);
+
     varName_LE = strcat('average_LE', '_', cortex);
     varName_RE = strcat('average_RE', '_', cortex);
 
@@ -37,10 +40,10 @@ for i = 1:length(cortices)
     RE_data = auditoryData.(varName_RE);
     
     % Compute summary statistics
-    LH_mean = mean(LH_data);
-    LH_sd = std(LH_data);
-    RH_mean = mean(RH_data);
-    RH_sd = std(RH_data);
+    LH_mean = mean(data.(varName_LH_all));
+    LH_sd = std(data.(varName_LH_all));
+    RH_mean = mean(data.(varName_RH_all));
+    RH_sd = std(data.(varName_RH_all));
 
     % Perform t-test
     [h, pvalue, ci, stats] = ttest(LH_data, RH_data);
@@ -56,7 +59,7 @@ for i = 1:length(cortices)
     ax = nexttile;
     set([ax], 'FontSize', fontsize);
     x_indices = 1:length(LH_data); % Assuming all data have the same length
-    x_indices = x_indices -1
+    x_indices = x_indices -1;
 
     hold on;
     lineWidth = 3.5;
